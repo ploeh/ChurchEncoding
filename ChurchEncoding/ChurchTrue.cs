@@ -8,17 +8,7 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public class ChurchTrue : IChurchBoolean
     {
-        public object Match(object trueCase, object falseCase)
-        {
-            return trueCase;
-        }
-
-        public int Match(int trueCase, int falseCase)
-        {
-            return trueCase;
-        }
-
-        public string Match(string trueCase, string falseCase)
+        public T Match<T>(T trueCase, T falseCase)
         {
             return trueCase;
         }

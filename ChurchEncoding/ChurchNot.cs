@@ -17,19 +17,9 @@ namespace Ploeh.Samples.ChurchEncoding
             this.b = b;
         }
 
-        public object Match(object trueCase, object falseCase)
+        public T Match<T>(T trueCase, T falseCase)
         {
             return b.Match(falseCase, trueCase);
-        }
-
-        public int Match(int trueCase, int falseCase)
-        {
-            return this.b.Match(falseCase, trueCase);
-        }
-
-        public string Match(string trueCase, string falseCase)
-        {
-            return this.b.Match(falseCase, trueCase);
         }
     }
 }
