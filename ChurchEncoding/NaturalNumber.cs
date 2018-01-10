@@ -24,8 +24,8 @@ namespace Ploeh.Samples.ChurchEncoding
         public static int Count(this INaturalNumber n)
         {
             return n.Match(
-                0,
-                p => 1 + p.Count());
+                zero: 0,
+                succ: p => 1 + p.Count());
         }
 
         public static INaturalNumber Add(
@@ -33,8 +33,8 @@ namespace Ploeh.Samples.ChurchEncoding
             INaturalNumber y)
         {
             return x.Match(
-                y,
-                p => new Successor(p.Add(y)));
+                zero: y,
+                succ: p => new Successor(p.Add(y)));
         }
 
         // The formula used here is
@@ -50,10 +50,10 @@ namespace Ploeh.Samples.ChurchEncoding
             INaturalNumber y)
         {
             return x.Match(
-                new Zero(),
-                px => y.Match(
-                    new Zero(),
-                    py =>
+                zero: new Zero(),
+                succ: px => y.Match(
+                    zero: new Zero(),
+                    succ: py =>
                         One
                         .Add(px)
                         .Add(py)
@@ -63,17 +63,17 @@ namespace Ploeh.Samples.ChurchEncoding
         public static IChurchBoolean IsZero(this INaturalNumber n)
         {
             return n.Match<IChurchBoolean>(
-                new ChurchTrue(),
-                _ => new ChurchFalse());
+                zero: new ChurchTrue(),
+                succ: _ => new ChurchFalse());
         }
 
         public static IChurchBoolean IsEven(this INaturalNumber n)
         {
             return n.Match(
-                new ChurchTrue(),        // 0 is even, so true
-                p1 => p1.Match(          // Match previous
-                    new ChurchFalse(),   // If 0 then successor was 1
-                    p2 => p2.IsEven())); // Eval previous' previous
+                zero: new ChurchTrue(),        // 0 is even, so true
+                succ: p1 => p1.Match(          // Match previous
+                    zero: new ChurchFalse(),   // If 0 then successor was 1
+                    succ: p2 => p2.IsEven())); // Eval previous' previous
         }
 
         public static IChurchBoolean IsOdd(this INaturalNumber n)
