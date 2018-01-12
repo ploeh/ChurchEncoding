@@ -74,6 +74,15 @@
     <Compile Include="NatualNumberTests.cs" />
     <Compile Include="NaturalNumber.cs" />
     <Compile Include="Nothing.cs" />
+    <Compile Include="PaymentExample\Child.cs" />
+    <Compile Include="PaymentExample\ChildPaymentService.cs" />
+    <Compile Include="PaymentExample\Individual.cs" />
+    <Compile Include="PaymentExample\IPaymentType.cs" />
+    <Compile Include="PaymentExample\Parent.cs" />
+    <Compile Include="PaymentExample\PaymentJsonModel.cs" />
+    <Compile Include="PaymentExample\PaymentService.cs" />
+    <Compile Include="PaymentExample\PaymentType.cs" />
+    <Compile Include="PaymentExample\PaymentTypeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BooleanTests.cs" />
     <Compile Include="Right.cs" />
