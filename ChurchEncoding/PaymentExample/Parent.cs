@@ -17,7 +17,7 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
 
         public T Match<T>(PaymentTypeParameters<T> parameters)
         {
-            return parameters.Parent(paymentService);
+            return parameters.RunParent(paymentService);
         }
     }
 }

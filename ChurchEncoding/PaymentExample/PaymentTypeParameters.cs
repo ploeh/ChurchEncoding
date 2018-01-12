@@ -13,13 +13,13 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
             Func<PaymentService, T> parent,
             Func<ChildPaymentService, T> child)
         {
-            Individual = individual;
-            Parent = parent;
-            Child = child;
+            RunIndividual = individual;
+            RunParent = parent;
+            RunChild = child;
         }
 
-        public Func<PaymentService, T> Individual { get; }
-        public Func<PaymentService, T> Parent { get; }
-        public Func<ChildPaymentService, T> Child { get; }
+        public Func<PaymentService, T> RunIndividual { get; }
+        public Func<PaymentService, T> RunParent { get; }
+        public Func<ChildPaymentService, T> RunChild { get; }
     }
 }
