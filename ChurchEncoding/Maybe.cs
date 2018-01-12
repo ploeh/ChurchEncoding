@@ -10,16 +10,18 @@ namespace Ploeh.Samples.ChurchEncoding
     {
         public static IChurchBoolean IsNothing<T>(this IMaybe<T> m)
         {
-            return m.Match<IChurchBoolean>(
-                nothing :   new ChurchTrue(), 
-                just : _ => new ChurchFalse());
+            return m.Match(
+                new MaybeParameters<T, IChurchBoolean>(
+                    nothing :   new ChurchTrue(), 
+                    just : _ => new ChurchFalse()));
         }
 
         public static IChurchBoolean IsJust<T>(this IMaybe<T> m)
         {
-            return m.Match<IChurchBoolean>(
-                nothing :   new ChurchFalse(),
-                just : _ => new ChurchTrue());
+            return m.Match(
+                new MaybeParameters<T, IChurchBoolean>(
+                    nothing :   new ChurchFalse(),
+                    just : _ => new ChurchTrue()));
         }
 
         // Functor
@@ -27,17 +29,19 @@ namespace Ploeh.Samples.ChurchEncoding
             this IMaybe<T> source,
             Func<T, TResult> selector)
         {
-            return source.Match<IMaybe<TResult>>(
-                nothing :   new Nothing<TResult>(),
-                just : x => new Just<TResult>(selector(x)));
+            return source.Match(
+                new MaybeParameters<T, IMaybe<TResult>>(
+                    nothing :   new Nothing<TResult>(),
+                    just : x => new Just<TResult>(selector(x))));
         }
 
         // Monad
         public static IMaybe<T> Flatten<T>(this IMaybe<IMaybe<T>> source)
         {
             return source.Match(
-                nothing :   new Nothing<T>(),
-                just : x => x);
+                new MaybeParameters<IMaybe<T>, IMaybe<T>>(
+                    nothing :   new Nothing<T>(),
+                    just : x => x));
         }
 
         public static IMaybe<TResult> SelectMany<T, TResult>(

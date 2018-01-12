@@ -49,7 +49,12 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
             Assert.Equal("MasterCard", actual.Name);
             Assert.Equal("Pay", actual.Action);
             Assert.False(actual.StartRecurrent.ToBool());
-            Assert.Equal("12345", actual.TransactionKey.Match("", x => x));
+            Assert.Equal(
+                "12345", 
+                actual.TransactionKey.Match(
+                    new MaybeParameters<string, string>(
+                        nothing :   "",
+                        just : x => x)));
         }
     }
 }
