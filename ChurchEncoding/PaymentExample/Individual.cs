@@ -15,9 +15,9 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
             this.paymentService = paymentService;
         }
 
-        public T Match<T>(IPaymentTypeParameters<T> parameters)
+        public T Accept<T>(IPaymentTypeVisitor<T> visitor)
         {
-            return parameters.RunIndividual(paymentService);
+            return visitor.VisitIndividual(paymentService);
         }
     }
 }

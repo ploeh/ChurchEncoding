@@ -8,6 +8,6 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
 {
     public interface IPaymentType
     {
-        T Match<T>(IPaymentTypeParameters<T> parameters);
+        T Accept<T>(IPaymentTypeVisitor<T> visitor);
     }
 }

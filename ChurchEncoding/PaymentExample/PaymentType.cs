@@ -10,13 +10,13 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
     {
         public static PaymentJsonModel ToJson(this IPaymentType payment)
         {
-            return payment.Match(new PaymentTypeToJsonParameters());
+            return payment.Accept(new PaymentTypeToJsonVisitor());
         }
 
-        private class PaymentTypeToJsonParameters :
-            IPaymentTypeParameters<PaymentJsonModel>
+        private class PaymentTypeToJsonVisitor :
+            IPaymentTypeVisitor<PaymentJsonModel>
         {
-            public PaymentJsonModel RunIndividual(PaymentService individual)
+            public PaymentJsonModel VisitIndividual(PaymentService individual)
             {
                 return new PaymentJsonModel
                 {
@@ -27,7 +27,7 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
                 };
             }
 
-            public PaymentJsonModel RunParent(PaymentService parent)
+            public PaymentJsonModel VisitParent(PaymentService parent)
             {
                 return new PaymentJsonModel
                 {
@@ -38,7 +38,7 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
                 };
             }
 
-            public PaymentJsonModel RunChild(ChildPaymentService child)
+            public PaymentJsonModel VisitChild(ChildPaymentService child)
             {
                 return new PaymentJsonModel
                 {
@@ -46,7 +46,7 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
                     Action = child.PaymentService.Action,
                     StartRecurrent = new ChurchFalse(),
                     TransactionKey =
-                                new Just<string>(child.OriginalTransactionKey)
+                        new Just<string>(child.OriginalTransactionKey)
                 };
             }
         }
