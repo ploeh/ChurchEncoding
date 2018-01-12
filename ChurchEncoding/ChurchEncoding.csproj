@@ -82,6 +82,7 @@
     <Compile Include="PaymentExample\PaymentJsonModel.cs" />
     <Compile Include="PaymentExample\PaymentService.cs" />
     <Compile Include="PaymentExample\PaymentType.cs" />
+    <Compile Include="PaymentExample\PaymentTypeParameters.cs" />
     <Compile Include="PaymentExample\PaymentTypeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BooleanTests.cs" />

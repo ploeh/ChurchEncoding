@@ -8,9 +8,6 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
 {
     public interface IPaymentType
     {
-        T Match<T>(
-            Func<PaymentService, T> individual,
-            Func<PaymentService, T> parent,
-            Func<ChildPaymentService, T> child);
+        T Match<T>(PaymentTypeParameters<T> parameters);
     }
 }

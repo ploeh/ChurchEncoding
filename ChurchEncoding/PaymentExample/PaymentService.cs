@@ -10,8 +10,8 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
     {
         public PaymentService(string name, string action)
         {
-            this.Name = name;
-            this.Action = action;
+            Name = name;
+            Action = action;
         }
 
         public string Name { get; }

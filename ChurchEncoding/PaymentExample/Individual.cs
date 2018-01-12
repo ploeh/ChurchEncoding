@@ -15,12 +15,9 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
             this.paymentService = paymentService;
         }
 
-        public T Match<T>(
-            Func<PaymentService, T> individual,
-            Func<PaymentService, T> parent,
-            Func<ChildPaymentService, T> child)
+        public T Match<T>(PaymentTypeParameters<T> parameters)
         {
-            return individual(paymentService);
+            return parameters.Individual(paymentService);
         }
     }
 }

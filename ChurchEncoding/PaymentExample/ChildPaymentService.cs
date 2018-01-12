@@ -12,8 +12,8 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
             string originalTransactionKey,
             PaymentService paymentService)
         {
-            this.OriginalTransactionKey = originalTransactionKey;
-            this.PaymentService = paymentService;
+            OriginalTransactionKey = originalTransactionKey;
+            PaymentService = paymentService;
         }
 
         public string OriginalTransactionKey { get; }
