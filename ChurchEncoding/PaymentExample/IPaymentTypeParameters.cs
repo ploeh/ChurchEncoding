@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.ChurchEncoding.PaymentExample
 {
-    public interface IPaymentType
+    public interface IPaymentTypeParameters<T>
     {
-        T Match<T>(IPaymentTypeParameters<T> parameters);
+        T RunIndividual(PaymentService individual);
+        T RunParent(PaymentService parent);
+        T RunChild(ChildPaymentService child);
     }
 }

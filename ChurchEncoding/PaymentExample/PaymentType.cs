@@ -10,33 +10,45 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
     {
         public static PaymentJsonModel ToJson(this IPaymentType payment)
         {
-            return payment.Match(
-                new PaymentTypeParameters<PaymentJsonModel>(
-                    individual : ps =>
-                        new PaymentJsonModel
-                        {
-                            Name = ps.Name,
-                            Action = ps.Action,
-                            StartRecurrent = new ChurchFalse(),
-                            TransactionKey = new Nothing<string>()
-                        },
-                    parent : ps =>
-                        new PaymentJsonModel
-                        {
-                            Name = ps.Name,
-                            Action = ps.Action,
-                            StartRecurrent = new ChurchTrue(),
-                            TransactionKey = new Nothing<string>()
-                        },
-                    child : cps =>
-                        new PaymentJsonModel
-                        {
-                            Name = cps.PaymentService.Name,
-                            Action = cps.PaymentService.Action,
-                            StartRecurrent = new ChurchFalse(),
-                            TransactionKey =
-                                new Just<string>(cps.OriginalTransactionKey)
-                        }));
+            return payment.Match(new PaymentTypeToJsonParameters());
+        }
+
+        private class PaymentTypeToJsonParameters :
+            IPaymentTypeParameters<PaymentJsonModel>
+        {
+            public PaymentJsonModel RunIndividual(PaymentService individual)
+            {
+                return new PaymentJsonModel
+                {
+                    Name = individual.Name,
+                    Action = individual.Action,
+                    StartRecurrent = new ChurchFalse(),
+                    TransactionKey = new Nothing<string>()
+                };
+            }
+
+            public PaymentJsonModel RunParent(PaymentService parent)
+            {
+                return new PaymentJsonModel
+                {
+                    Name = parent.Name,
+                    Action = parent.Action,
+                    StartRecurrent = new ChurchTrue(),
+                    TransactionKey = new Nothing<string>()
+                };
+            }
+
+            public PaymentJsonModel RunChild(ChildPaymentService child)
+            {
+                return new PaymentJsonModel
+                {
+                    Name = child.PaymentService.Name,
+                    Action = child.PaymentService.Action,
+                    StartRecurrent = new ChurchFalse(),
+                    TransactionKey =
+                                new Just<string>(child.OriginalTransactionKey)
+                };
+            }
         }
     }
 }
