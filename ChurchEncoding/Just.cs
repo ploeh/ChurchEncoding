@@ -17,9 +17,9 @@ namespace Ploeh.Samples.ChurchEncoding
             this.value = value;
         }
 
-        public TResult Match<TResult>(IMaybeParameters<T, TResult> parameters)
+        public TResult Accept<TResult>(IMaybeVisitor<T, TResult> visitor)
         {
-            return parameters.Just(value);
+            return visitor.VisitJust(value);
         }
     }
 }

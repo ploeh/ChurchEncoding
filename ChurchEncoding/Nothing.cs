@@ -8,9 +8,9 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public class Nothing<T> : IMaybe<T>
     {
-        public TResult Match<TResult>(IMaybeParameters<T, TResult> parameters)
+        public TResult Accept<TResult>(IMaybeVisitor<T, TResult> visitor)
         {
-            return parameters.Nothing;
+            return visitor.VisitNothing;
         }
     }
 }

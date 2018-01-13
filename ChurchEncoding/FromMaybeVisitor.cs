@@ -8,21 +8,21 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     // Does the same work as Haskell's Data.Maybe.fromMaybe function, hence the
     // name.
-    public class FromMaybeParameters<T> : IMaybeParameters<T, T>
+    public class FromMaybeVisitor<T> : IMaybeVisitor<T, T>
     {
         private readonly T nothingResult;
 
-        public FromMaybeParameters(T nothingResult)
+        public FromMaybeVisitor(T nothingResult)
         {
             this.nothingResult = nothingResult;
         }
 
-        public T Nothing
+        public T VisitNothing
         {
             get { return nothingResult; }
         }
 
-        public T Just(T just)
+        public T VisitJust(T just)
         {
             return just;
         }

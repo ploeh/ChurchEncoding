@@ -8,6 +8,6 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public interface IMaybe<T>
     {
-        TResult Match<TResult>(IMaybeParameters<T, TResult> parameters);
+        TResult Accept<TResult>(IMaybeVisitor<T, TResult> visitor);
     }
 }

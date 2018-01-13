@@ -51,8 +51,8 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
             Assert.False(actual.StartRecurrent.ToBool());
             Assert.Equal(
                 "12345", 
-                actual.TransactionKey.Match(
-                    new FromMaybeParameters<string>("")));
+                actual.TransactionKey.Accept(
+                    new FromMaybeVisitor<string>("")));
         }
     }
 }
