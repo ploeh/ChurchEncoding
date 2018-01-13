@@ -8,6 +8,6 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public interface INaturalNumber
     {
-        T Match<T>(NaturalNumberParameters<T> parameters);
+        T Match<T>(INaturalNumberParameters<T> parameters);
     }
 }

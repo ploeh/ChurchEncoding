@@ -23,20 +23,49 @@ namespace Ploeh.Samples.ChurchEncoding
 
         public static int Count(this INaturalNumber n)
         {
-            return n.Match(
-                new NaturalNumberParameters<int>(
-                    zero: 0,
-                    succ: p => 1 + p.Count()));
+            return n.Match(new CountNaturalNumberParameters());
+        }
+
+        private class CountNaturalNumberParameters : 
+            INaturalNumberParameters<int>
+        {
+            public int Zero
+            {
+                get { return 0; }
+            }
+
+            public int Succ(INaturalNumber predecessor)
+            {
+                return 1 + predecessor.Count();
+            }
         }
 
         public static INaturalNumber Add(
             this INaturalNumber x,
             INaturalNumber y)
         {
-            return x.Match(
-                new NaturalNumberParameters<INaturalNumber>(
-                    zero: y,
-                    succ: p => new Successor(p.Add(y))));
+            return x.Match(new AddNaturalNumberParameters(y));
+        }
+
+        private class AddNaturalNumberParameters :
+            INaturalNumberParameters<INaturalNumber>
+        {
+            private readonly INaturalNumber other;
+
+            public AddNaturalNumberParameters(INaturalNumber other)
+            {
+                this.other = other;
+            }
+
+            public INaturalNumber Zero
+            {
+                get { return other; }
+            }
+
+            public INaturalNumber Succ(INaturalNumber predecessor)
+            {
+                return new Successor(predecessor.Add(other));
+            }
         }
 
         // The formula used here is
@@ -51,36 +80,111 @@ namespace Ploeh.Samples.ChurchEncoding
             this INaturalNumber x,
             INaturalNumber y)
         {
-            return x.Match(
-                new NaturalNumberParameters<INaturalNumber>(
-                    zero: new Zero(),
-                    succ: px => y.Match(
-                        new NaturalNumberParameters<INaturalNumber>(
-                            zero: new Zero(),
-                            succ: py =>
-                                One
-                                .Add(px)
-                                .Add(py)
-                                .Add(px.Multiply(py))))));
+            return x.Match(new MultiplyNaturalNumberParameters(y));
+        }
+
+        private class MultiplyNaturalNumberParameters : 
+            INaturalNumberParameters<INaturalNumber>
+        {
+            private readonly INaturalNumber other;
+
+            public MultiplyNaturalNumberParameters(INaturalNumber other)
+            {
+                this.other = other;
+            }
+
+            public INaturalNumber Zero
+            {
+                get { return new Zero(); }
+            }
+
+            public INaturalNumber Succ(INaturalNumber predecessor)
+            {
+                return this.other.Match(
+                    new MultiplyOtherNaturalNumberParameters(predecessor));
+            }
+
+            private class MultiplyOtherNaturalNumberParameters :
+                INaturalNumberParameters<INaturalNumber>
+            {
+                private readonly INaturalNumber other;
+
+                public MultiplyOtherNaturalNumberParameters(INaturalNumber other)
+                {
+                    this.other = other;
+                }
+
+                public INaturalNumber Zero
+                {
+                    get { return new Zero(); }
+                }
+
+                public INaturalNumber Succ(INaturalNumber predecessor)
+                {
+                    return
+                        One
+                        .Add(other)
+                        .Add(predecessor)
+                        .Add(other.Multiply(predecessor));
+                }
+            }
         }
 
         public static IChurchBoolean IsZero(this INaturalNumber n)
         {
-            return n.Match<IChurchBoolean>(
-                new NaturalNumberParameters<IChurchBoolean>(
-                    zero: new ChurchTrue(),
-                    succ: _ => new ChurchFalse()));
+            return n.Match(new IsZeroNaturalNumberParameters());
+        }
+
+        private class IsZeroNaturalNumberParameters :
+            INaturalNumberParameters<IChurchBoolean>
+        {
+            public IChurchBoolean Zero
+            {
+                get { return new ChurchTrue(); }
+            }
+
+            public IChurchBoolean Succ(INaturalNumber predecessor)
+            {
+                return new ChurchFalse();
+            }
         }
 
         public static IChurchBoolean IsEven(this INaturalNumber n)
         {
-            return n.Match(
-                new NaturalNumberParameters<IChurchBoolean>(
-                    zero : new ChurchTrue(),             // 0 is even, so true
-                    succ: p1 => p1.Match(                // Match previous
-                        new NaturalNumberParameters<IChurchBoolean>(
-                            zero: new ChurchFalse(),     // If 0 then successor was 1
-                            succ: p2 => p2.IsEven())))); // Eval previous' previous
+            return n.Match(new IsEvenNaturalNumberParameters());
+        }
+
+        private class IsEvenNaturalNumberParameters :
+            INaturalNumberParameters<IChurchBoolean>
+        {
+            // 0 is even, so true
+            public IChurchBoolean Zero
+            {
+                get { return new ChurchTrue(); }
+            }
+
+            public IChurchBoolean Succ(INaturalNumber predecessor)
+            {
+                // Match previous
+                return predecessor.Match(
+                    new IsEvenPredecessorNaturalNumberParameters());
+            }
+
+            private class IsEvenPredecessorNaturalNumberParameters :
+                INaturalNumberParameters<IChurchBoolean>
+            {
+                // If 0, the successor was 1
+                public IChurchBoolean Zero
+                {
+                    get { return new ChurchFalse(); }
+                }
+
+                public IChurchBoolean Succ(INaturalNumber predecessor)
+                {
+                    // Evaluate previous' previous value
+                    return predecessor.IsEven();
+                }
+            }
         }
 
         public static IChurchBoolean IsOdd(this INaturalNumber n)

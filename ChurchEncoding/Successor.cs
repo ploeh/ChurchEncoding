@@ -15,7 +15,7 @@ namespace Ploeh.Samples.ChurchEncoding
             predecessor = n;
         }
 
-        public T Match<T>(NaturalNumberParameters<T> parameters)
+        public T Match<T>(INaturalNumberParameters<T> parameters)
         {
             return parameters.Succ(predecessor);
         }
