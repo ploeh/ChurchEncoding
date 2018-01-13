@@ -52,9 +52,7 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
             Assert.Equal(
                 "12345", 
                 actual.TransactionKey.Match(
-                    new MaybeParameters<string, string>(
-                        nothing :   "",
-                        just : x => x)));
+                    new FromMaybeParameters<string>("")));
         }
     }
 }

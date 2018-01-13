@@ -71,13 +71,14 @@
     <Compile Include="Just.cs" />
     <Compile Include="Left.cs" />
     <Compile Include="Maybe.cs" />
-    <Compile Include="MaybeParameters.cs" />
+    <Compile Include="IMaybeParameters.cs" />
     <Compile Include="MaybeTests.cs" />
     <Compile Include="NatualNumberTests.cs" />
     <Compile Include="NaturalNumber.cs" />
     <Compile Include="Nothing.cs" />
     <Compile Include="PaymentExample\Child.cs" />
     <Compile Include="PaymentExample\ChildPaymentService.cs" />
+    <Compile Include="FromMaybeParameters.cs" />
     <Compile Include="PaymentExample\Individual.cs" />
     <Compile Include="PaymentExample\IPaymentType.cs" />
     <Compile Include="PaymentExample\Parent.cs" />

@@ -13,24 +13,44 @@ namespace Ploeh.Samples.ChurchEncoding
         public void MatchEmpty()
         {
             IMaybe<Guid> sut = new Nothing<Guid>();
-            var actual =
-                sut.Match(
-                    new MaybeParameters<Guid, string>(
-                        nothing :   "empty",
-                        just : _ => "not empty"));
+            var actual = sut.Match(new MatchEmptyMaybeParameters<Guid>());
             Assert.Equal("empty", actual);
+        }
+
+        private class MatchEmptyMaybeParameters<T> :
+            IMaybeParameters<T, string>
+        {
+            public string Nothing
+            {
+                get { return "empty"; }
+            }
+
+            public string Just(T just)
+            {
+                return "not empty";
+            }
         }
 
         [Fact]
         public void MatchFilled()
         {
             IMaybe<int> sut = new Just<int>(42);
-            var actual =
-                sut.Match(
-                    new MaybeParameters<int, string>(
-                        nothing :   "empty",
-                        just : i => i.ToString()));
+            var actual = sut.Match(new MatchFilledMaybeParameters<int>());
             Assert.Equal("42", actual);
+        }
+
+        private class MatchFilledMaybeParameters<T> :
+            IMaybeParameters<T, string>
+        {
+            public string Nothing
+            {
+                get { return "empty"; }
+            }
+
+            public string Just(T just)
+            {
+                return just.ToString();
+            }
         }
 
         [Fact]
@@ -41,10 +61,7 @@ namespace Ploeh.Samples.ChurchEncoding
                                     select i.ToString();
             Assert.Equal(
                 "42",
-                actual.Match(
-                    new MaybeParameters<string, string>(
-                        nothing :   "nothing",
-                        just : x => x)));
+                actual.Match(new FromMaybeParameters<string>("nothing")));
         }
 
         [Fact]
@@ -60,9 +77,9 @@ namespace Ploeh.Samples.ChurchEncoding
             Assert.Equal(
                 36,
                 actual
-                    .Match(new MaybeParameters<INaturalNumber, INaturalNumber>(
-                        nothing :   NaturalNumber.Zero,
-                        just : x => x))
+                    .Match(
+                        new FromMaybeParameters<INaturalNumber>(
+                            NaturalNumber.Zero))
                     .Count());
         }
 
@@ -93,9 +110,7 @@ namespace Ploeh.Samples.ChurchEncoding
         public void TryParseSqrtFlattenExample()
         {
             var actual = TryParse("49").Select(i => Sqrt(i)).Flatten();
-            Assert.Equal(7, actual.Match(new MaybeParameters<double, double>(
-                nothing :   0,
-                just : x => x)));
+            Assert.Equal(7, actual.Match(new FromMaybeParameters<double>(0)));
         }
 
         [Fact]
@@ -104,9 +119,7 @@ namespace Ploeh.Samples.ChurchEncoding
             var actual = from i in TryParse("49")
                          from d in Sqrt(i)
                          select d;
-            Assert.Equal(7, actual.Match(new MaybeParameters<double, double>(
-                nothing:   0,
-                just: x => x)));
+            Assert.Equal(7, actual.Match(new FromMaybeParameters<double>(0)));
         }
     }
 }

@@ -10,18 +10,40 @@ namespace Ploeh.Samples.ChurchEncoding
     {
         public static IChurchBoolean IsNothing<T>(this IMaybe<T> m)
         {
-            return m.Match(
-                new MaybeParameters<T, IChurchBoolean>(
-                    nothing :   new ChurchTrue(), 
-                    just : _ => new ChurchFalse()));
+            return m.Match(new IsNothingMaybeParameters<T>());
+        }
+
+        private class IsNothingMaybeParameters<T> :
+            IMaybeParameters<T, IChurchBoolean>
+        {
+            public IChurchBoolean Nothing
+            {
+                get { return new ChurchTrue(); }
+            }
+
+            public IChurchBoolean Just(T just)
+            {
+                return new ChurchFalse();
+            }
         }
 
         public static IChurchBoolean IsJust<T>(this IMaybe<T> m)
         {
-            return m.Match(
-                new MaybeParameters<T, IChurchBoolean>(
-                    nothing :   new ChurchFalse(),
-                    just : _ => new ChurchTrue()));
+            return m.Match(new IsJustMaybeParameters<T>());
+        }
+
+        private class IsJustMaybeParameters<T> :
+            IMaybeParameters<T, IChurchBoolean>
+        {
+            public IChurchBoolean Nothing
+            {
+                get { return new ChurchFalse(); }
+            }
+
+            public IChurchBoolean Just(T just)
+            {
+                return new ChurchTrue();
+            }
         }
 
         // Functor
@@ -30,18 +52,48 @@ namespace Ploeh.Samples.ChurchEncoding
             Func<T, TResult> selector)
         {
             return source.Match(
-                new MaybeParameters<T, IMaybe<TResult>>(
-                    nothing :   new Nothing<TResult>(),
-                    just : x => new Just<TResult>(selector(x))));
+                new SelectMaybeParameters<T, TResult>(selector));
+        }
+
+        private class SelectMaybeParameters<T, TResult> :
+            IMaybeParameters<T, IMaybe<TResult>>
+        {
+            private readonly Func<T, TResult> selector;
+
+            public SelectMaybeParameters(Func<T, TResult> selector)
+            {
+                this.selector = selector;
+            }
+
+            public IMaybe<TResult> Nothing
+            {
+                get { return new Nothing<TResult>(); }
+            }
+
+            public IMaybe<TResult> Just(T just)
+            {
+                return new Just<TResult>(this.selector(just));
+            }
         }
 
         // Monad
         public static IMaybe<T> Flatten<T>(this IMaybe<IMaybe<T>> source)
         {
-            return source.Match(
-                new MaybeParameters<IMaybe<T>, IMaybe<T>>(
-                    nothing :   new Nothing<T>(),
-                    just : x => x));
+            return source.Match(new FlattenMaybeParameters<T>());
+        }
+
+        private class FlattenMaybeParameters<T> :
+            IMaybeParameters<IMaybe<T>, IMaybe<T>>
+        {
+            public IMaybe<T> Nothing
+            {
+                get { return new Nothing<T>(); }
+            }
+
+            public IMaybe<T> Just(IMaybe<T> just)
+            {
+                return just;
+            }
         }
 
         public static IMaybe<TResult> SelectMany<T, TResult>(

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.ChurchEncoding
 {
-    public interface IMaybe<T>
+    public interface IMaybeParameters<T, TResult>
     {
-        TResult Match<TResult>(IMaybeParameters<T, TResult> parameters);
+        TResult Nothing { get; }
+
+        TResult Just(T just);
     }
 }
