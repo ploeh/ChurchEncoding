@@ -10,7 +10,7 @@ namespace Ploeh.Samples.ChurchEncoding
     {
         public static bool ToBool(this IChurchBoolean b)
         {
-            return b.Match(new ChurchBooleanParameters<bool>(true, false));
+            return b.Accept(new ChurchBooleanVisitor<bool>(true, false));
         }
 
         public static IChurchBoolean ToChurchBoolean(this bool b)

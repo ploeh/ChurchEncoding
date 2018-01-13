@@ -57,7 +57,7 @@
   <ItemGroup>
     <Compile Include="ChurchAnd.cs" />
     <Compile Include="ChurchBoolean.cs" />
-    <Compile Include="ChurchBooleanParameters.cs" />
+    <Compile Include="ChurchBooleanVisitor.cs" />
     <Compile Include="ChurchFalse.cs" />
     <Compile Include="ChurchNot.cs" />
     <Compile Include="ChurchOr.cs" />

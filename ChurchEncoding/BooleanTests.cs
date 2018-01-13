@@ -39,7 +39,7 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             var b = new ChurchOr(new ChurchTrue(), new ChurchFalse());
             var actual =
-                b.Match(new ChurchBooleanParameters<string>("foo", "bar"));
+                b.Accept(new ChurchBooleanVisitor<string>("foo", "bar"));
             Assert.Equal("foo", actual);
         }
 
@@ -52,7 +52,7 @@ namespace Ploeh.Samples.ChurchEncoding
                     new ChurchNot(
                         new ChurchTrue()));
             var actual =
-                b.Match(new ChurchBooleanParameters<string>("foo", "bar"));
+                b.Accept(new ChurchBooleanVisitor<string>("foo", "bar"));
             Assert.Equal("bar", actual);
         }
 
@@ -60,7 +60,7 @@ namespace Ploeh.Samples.ChurchEncoding
         public void Int32Example1()
         {
             var b = new ChurchOr(new ChurchFalse(), new ChurchFalse());
-            var actual = b.Match(new ChurchBooleanParameters<int>(42, 1337));
+            var actual = b.Accept(new ChurchBooleanVisitor<int>(42, 1337));
             Assert.Equal(1337, actual);
         }
 
@@ -72,7 +72,7 @@ namespace Ploeh.Samples.ChurchEncoding
                     new ChurchAnd(
                         new ChurchTrue(),
                         new ChurchFalse()));
-            var actual = b.Match(new ChurchBooleanParameters<int>(42, 1337));
+            var actual = b.Accept(new ChurchBooleanVisitor<int>(42, 1337));
             Assert.Equal(42, actual);
         }
     }

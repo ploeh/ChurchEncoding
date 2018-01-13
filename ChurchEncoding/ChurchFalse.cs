@@ -8,9 +8,9 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public class ChurchFalse : IChurchBoolean
     {
-        public T Match<T>(ChurchBooleanParameters<T> parameters)
+        public T Accept<T>(ChurchBooleanVisitor<T> visitor)
         {
-            return parameters.FalseCase;
+            return visitor.VisitFalse;
         }
     }
 }
