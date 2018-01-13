@@ -24,8 +24,9 @@ namespace Ploeh.Samples.ChurchEncoding
         public static int Count(this INaturalNumber n)
         {
             return n.Match(
-                zero: 0,
-                succ: p => 1 + p.Count());
+                new NaturalNumberParameters<int>(
+                    zero: 0,
+                    succ: p => 1 + p.Count()));
         }
 
         public static INaturalNumber Add(
@@ -33,8 +34,9 @@ namespace Ploeh.Samples.ChurchEncoding
             INaturalNumber y)
         {
             return x.Match(
-                zero: y,
-                succ: p => new Successor(p.Add(y)));
+                new NaturalNumberParameters<INaturalNumber>(
+                    zero: y,
+                    succ: p => new Successor(p.Add(y))));
         }
 
         // The formula used here is
@@ -50,30 +52,35 @@ namespace Ploeh.Samples.ChurchEncoding
             INaturalNumber y)
         {
             return x.Match(
-                zero: new Zero(),
-                succ: px => y.Match(
+                new NaturalNumberParameters<INaturalNumber>(
                     zero: new Zero(),
-                    succ: py =>
-                        One
-                        .Add(px)
-                        .Add(py)
-                        .Add(px.Multiply(py))));
+                    succ: px => y.Match(
+                        new NaturalNumberParameters<INaturalNumber>(
+                            zero: new Zero(),
+                            succ: py =>
+                                One
+                                .Add(px)
+                                .Add(py)
+                                .Add(px.Multiply(py))))));
         }
 
         public static IChurchBoolean IsZero(this INaturalNumber n)
         {
             return n.Match<IChurchBoolean>(
-                zero: new ChurchTrue(),
-                succ: _ => new ChurchFalse());
+                new NaturalNumberParameters<IChurchBoolean>(
+                    zero: new ChurchTrue(),
+                    succ: _ => new ChurchFalse()));
         }
 
         public static IChurchBoolean IsEven(this INaturalNumber n)
         {
             return n.Match(
-                zero: new ChurchTrue(),        // 0 is even, so true
-                succ: p1 => p1.Match(          // Match previous
-                    zero: new ChurchFalse(),   // If 0 then successor was 1
-                    succ: p2 => p2.IsEven())); // Eval previous' previous
+                new NaturalNumberParameters<IChurchBoolean>(
+                    zero : new ChurchTrue(),             // 0 is even, so true
+                    succ: p1 => p1.Match(                // Match previous
+                        new NaturalNumberParameters<IChurchBoolean>(
+                            zero: new ChurchFalse(),     // If 0 then successor was 1
+                            succ: p2 => p2.IsEven())))); // Eval previous' previous
         }
 
         public static IChurchBoolean IsOdd(this INaturalNumber n)
