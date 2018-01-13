@@ -8,6 +8,6 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public interface IChurchBoolean
     {
-        T Match<T>(T trueCase, T falseCase);
+        T Match<T>(ChurchBooleanParameters<T> parameters);
     }
 }

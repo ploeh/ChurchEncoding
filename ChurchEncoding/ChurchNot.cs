@@ -17,9 +17,12 @@ namespace Ploeh.Samples.ChurchEncoding
             this.b = b;
         }
 
-        public T Match<T>(T trueCase, T falseCase)
+        public T Match<T>(ChurchBooleanParameters<T> parameters)
         {
-            return b.Match(falseCase, trueCase);
+            return b.Match(
+                new ChurchBooleanParameters<T>(
+                    trueCase  : parameters.FalseCase,
+                    falseCase : parameters.TrueCase));
         }
     }
 }
