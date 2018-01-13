@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.ChurchEncoding
 {
-    public interface INaturalNumberParameters<T>
+    public interface INaturalNumberVisitor<T>
     {
-        T Zero { get; }
-        T Succ(INaturalNumber predecessor);
+        T VisitZero { get; }
+        T VisitSucc(INaturalNumber predecessor);
     }
 }

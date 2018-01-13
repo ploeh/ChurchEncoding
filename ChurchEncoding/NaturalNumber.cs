@@ -23,18 +23,18 @@ namespace Ploeh.Samples.ChurchEncoding
 
         public static int Count(this INaturalNumber n)
         {
-            return n.Match(new CountNaturalNumberParameters());
+            return n.Accept(new CountNaturalNumberVisitor());
         }
 
-        private class CountNaturalNumberParameters : 
-            INaturalNumberParameters<int>
+        private class CountNaturalNumberVisitor : 
+            INaturalNumberVisitor<int>
         {
-            public int Zero
+            public int VisitZero
             {
                 get { return 0; }
             }
 
-            public int Succ(INaturalNumber predecessor)
+            public int VisitSucc(INaturalNumber predecessor)
             {
                 return 1 + predecessor.Count();
             }
@@ -44,25 +44,25 @@ namespace Ploeh.Samples.ChurchEncoding
             this INaturalNumber x,
             INaturalNumber y)
         {
-            return x.Match(new AddNaturalNumberParameters(y));
+            return x.Accept(new AddNaturalNumberVisitor(y));
         }
 
-        private class AddNaturalNumberParameters :
-            INaturalNumberParameters<INaturalNumber>
+        private class AddNaturalNumberVisitor :
+            INaturalNumberVisitor<INaturalNumber>
         {
             private readonly INaturalNumber other;
 
-            public AddNaturalNumberParameters(INaturalNumber other)
+            public AddNaturalNumberVisitor(INaturalNumber other)
             {
                 this.other = other;
             }
 
-            public INaturalNumber Zero
+            public INaturalNumber VisitZero
             {
                 get { return other; }
             }
 
-            public INaturalNumber Succ(INaturalNumber predecessor)
+            public INaturalNumber VisitSucc(INaturalNumber predecessor)
             {
                 return new Successor(predecessor.Add(other));
             }
@@ -80,46 +80,46 @@ namespace Ploeh.Samples.ChurchEncoding
             this INaturalNumber x,
             INaturalNumber y)
         {
-            return x.Match(new MultiplyNaturalNumberParameters(y));
+            return x.Accept(new MultiplyNaturalNumberVisitor(y));
         }
 
-        private class MultiplyNaturalNumberParameters : 
-            INaturalNumberParameters<INaturalNumber>
+        private class MultiplyNaturalNumberVisitor : 
+            INaturalNumberVisitor<INaturalNumber>
         {
             private readonly INaturalNumber other;
 
-            public MultiplyNaturalNumberParameters(INaturalNumber other)
+            public MultiplyNaturalNumberVisitor(INaturalNumber other)
             {
                 this.other = other;
             }
 
-            public INaturalNumber Zero
+            public INaturalNumber VisitZero
             {
                 get { return new Zero(); }
             }
 
-            public INaturalNumber Succ(INaturalNumber predecessor)
+            public INaturalNumber VisitSucc(INaturalNumber predecessor)
             {
-                return this.other.Match(
-                    new MultiplyOtherNaturalNumberParameters(predecessor));
+                return this.other.Accept(
+                    new MultiplyOtherNaturalNumberVisitor(predecessor));
             }
 
-            private class MultiplyOtherNaturalNumberParameters :
-                INaturalNumberParameters<INaturalNumber>
+            private class MultiplyOtherNaturalNumberVisitor :
+                INaturalNumberVisitor<INaturalNumber>
             {
                 private readonly INaturalNumber other;
 
-                public MultiplyOtherNaturalNumberParameters(INaturalNumber other)
+                public MultiplyOtherNaturalNumberVisitor(INaturalNumber other)
                 {
                     this.other = other;
                 }
 
-                public INaturalNumber Zero
+                public INaturalNumber VisitZero
                 {
                     get { return new Zero(); }
                 }
 
-                public INaturalNumber Succ(INaturalNumber predecessor)
+                public INaturalNumber VisitSucc(INaturalNumber predecessor)
                 {
                     return
                         One
@@ -132,18 +132,18 @@ namespace Ploeh.Samples.ChurchEncoding
 
         public static IChurchBoolean IsZero(this INaturalNumber n)
         {
-            return n.Match(new IsZeroNaturalNumberParameters());
+            return n.Accept(new IsZeroNaturalNumberVisitor());
         }
 
-        private class IsZeroNaturalNumberParameters :
-            INaturalNumberParameters<IChurchBoolean>
+        private class IsZeroNaturalNumberVisitor :
+            INaturalNumberVisitor<IChurchBoolean>
         {
-            public IChurchBoolean Zero
+            public IChurchBoolean VisitZero
             {
                 get { return new ChurchTrue(); }
             }
 
-            public IChurchBoolean Succ(INaturalNumber predecessor)
+            public IChurchBoolean VisitSucc(INaturalNumber predecessor)
             {
                 return new ChurchFalse();
             }
@@ -151,35 +151,35 @@ namespace Ploeh.Samples.ChurchEncoding
 
         public static IChurchBoolean IsEven(this INaturalNumber n)
         {
-            return n.Match(new IsEvenNaturalNumberParameters());
+            return n.Accept(new IsEvenNaturalNumberVisitor());
         }
 
-        private class IsEvenNaturalNumberParameters :
-            INaturalNumberParameters<IChurchBoolean>
+        private class IsEvenNaturalNumberVisitor :
+            INaturalNumberVisitor<IChurchBoolean>
         {
             // 0 is even, so true
-            public IChurchBoolean Zero
+            public IChurchBoolean VisitZero
             {
                 get { return new ChurchTrue(); }
             }
 
-            public IChurchBoolean Succ(INaturalNumber predecessor)
+            public IChurchBoolean VisitSucc(INaturalNumber predecessor)
             {
                 // Match previous
-                return predecessor.Match(
-                    new IsEvenPredecessorNaturalNumberParameters());
+                return predecessor.Accept(
+                    new IsEvenPredecessorNaturalNumberVisitor());
             }
 
-            private class IsEvenPredecessorNaturalNumberParameters :
-                INaturalNumberParameters<IChurchBoolean>
+            private class IsEvenPredecessorNaturalNumberVisitor :
+                INaturalNumberVisitor<IChurchBoolean>
             {
                 // If 0, the successor was 1
-                public IChurchBoolean Zero
+                public IChurchBoolean VisitZero
                 {
                     get { return new ChurchFalse(); }
                 }
 
-                public IChurchBoolean Succ(INaturalNumber predecessor)
+                public IChurchBoolean VisitSucc(INaturalNumber predecessor)
                 {
                     // Evaluate previous' previous value
                     return predecessor.IsEven();

@@ -8,9 +8,9 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public class Zero : INaturalNumber
     {
-        public T Match<T>(INaturalNumberParameters<T> parameters)
+        public T Accept<T>(INaturalNumberVisitor<T> visitor)
         {
-            return parameters.Zero;
+            return visitor.VisitZero;
         }
     }
 }
