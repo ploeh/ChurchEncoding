@@ -21,5 +21,15 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             return b.Match(falseCase, trueCase);
         }
+
+        public int Match(int trueCase, int falseCase)
+        {
+            return this.b.Match(falseCase, trueCase);
+        }
+
+        public string Match(string trueCase, string falseCase)
+        {
+            return this.b.Match(falseCase, trueCase);
+        }
     }
 }

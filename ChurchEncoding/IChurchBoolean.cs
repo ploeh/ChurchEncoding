@@ -9,5 +9,9 @@ namespace Ploeh.Samples.ChurchEncoding
     public interface IChurchBoolean
     {
         object Match(object trueCase, object falseCase);
+
+        int Match(int trueCase, int falseCase);
+
+        string Match(string trueCase, string falseCase);
     }
 }

@@ -55,25 +55,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChurchAndOfString.cs" />
-    <Compile Include="ChurchAndOfInt32.cs" />
     <Compile Include="ChurchAnd.cs" />
     <Compile Include="ChurchBoolean.cs" />
-    <Compile Include="ChurchFalseOfString.cs" />
-    <Compile Include="ChurchFalseOfInt32.cs" />
     <Compile Include="ChurchFalse.cs" />
-    <Compile Include="ChurchNotOfString.cs" />
-    <Compile Include="ChurchNotOfInt32.cs" />
     <Compile Include="ChurchNot.cs" />
-    <Compile Include="ChurchOrOfString.cs" />
-    <Compile Include="ChurchOrOfInt32.cs" />
     <Compile Include="ChurchOr.cs" />
-    <Compile Include="ChurchTrueOfString.cs" />
-    <Compile Include="ChurchTrueOfInt32.cs" />
     <Compile Include="ChurchTrue.cs" />
     <Compile Include="IChurchBoolean.cs" />
-    <Compile Include="IChurchBooleanOfString.cs" />
-    <Compile Include="IChurchBooleanOfInt32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BooleanTests.cs" />
   </ItemGroup>
