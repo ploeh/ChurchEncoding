@@ -61,11 +61,13 @@
     <Compile Include="ChurchNot.cs" />
     <Compile Include="ChurchOr.cs" />
     <Compile Include="ChurchTrue.cs" />
+    <Compile Include="EitherTests.cs" />
     <Compile Include="IChurchBoolean.cs" />
     <Compile Include="IEither.cs" />
     <Compile Include="IMaybe.cs" />
     <Compile Include="INaturalNumber.cs" />
     <Compile Include="Just.cs" />
+    <Compile Include="Left.cs" />
     <Compile Include="Maybe.cs" />
     <Compile Include="MaybeTests.cs" />
     <Compile Include="NatualNumberTests.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Nothing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BooleanTests.cs" />
+    <Compile Include="Right.cs" />
     <Compile Include="Successor.cs" />
     <Compile Include="Zero.cs" />
   </ItemGroup>
