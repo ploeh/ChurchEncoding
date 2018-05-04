@@ -65,6 +65,7 @@
     <Compile Include="IMaybe.cs" />
     <Compile Include="INaturalNumber.cs" />
     <Compile Include="Just.cs" />
+    <Compile Include="Maybe.cs" />
     <Compile Include="MaybeTests.cs" />
     <Compile Include="NatualNumberTests.cs" />
     <Compile Include="NaturalNumber.cs" />

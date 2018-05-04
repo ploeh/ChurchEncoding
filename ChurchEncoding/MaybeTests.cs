@@ -24,5 +24,14 @@ namespace Ploeh.Samples.ChurchEncoding
             var actual = sut.Match("empty", i => i.ToString());
             Assert.Equal("42", actual);
         }
+
+        [Fact]
+        public void SimpleQueryExpressionWorks()
+        {
+            IMaybe<int> sut = new Just<int>(42);
+            IMaybe<string> actual = from i in sut
+                                    select i.ToString();
+            Assert.Equal("42", actual.Match("nothing", x => x));
+        }
     }
 }
