@@ -177,5 +177,14 @@ namespace Ploeh.Samples.ChurchEncoding
                          select s.Length;
             Assert.Equal(3, actual.Match(g => g.ToString().Length, s => s));
         }
+
+        [Fact]
+        public void UseCartesianQuerySyntax()
+        {
+            var actual = from x in new Right<string, int>(42)
+                         from y in new Left<string, double>("foo")
+                         select Math.Pow(x, y);
+            Assert.Equal("foo", actual.Match(l => l, _ => "bar"));
+        }
     }
 }

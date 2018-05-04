@@ -40,5 +40,31 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             return source.SelectRight(selector);
         }
+
+        // Monad
+        public static IEither<L, R> Join<L, R>(
+            this IEither<L, IEither<L, R>> source)
+        {
+            return source.Match(
+                onLeft:  l => new Left<L, R>(l),
+                onRight: r => r);
+        }
+
+        public static IEither<L, R1> SelectMany<L, R, R1>(
+            this IEither<L, R> source,
+            Func<R, IEither<L, R1>> selector)
+        {
+            return source.Select(selector).Join();
+        }
+
+        public static IEither<L, R1> SelectMany<L, R, R1, U>(
+            this IEither<L, R> source,
+            Func<R, IEither<L, U>> k,
+            Func<R, U, R1> s)
+        {
+            return source
+                .SelectMany(x => k(x)
+                    .SelectMany(y => new Right<L, R1>(s(x, y))));
+        }
     }
 }
