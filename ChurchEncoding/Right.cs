@@ -17,9 +17,9 @@ namespace Ploeh.Samples.ChurchEncoding
             this.right = right;
         }
 
-        public T Match<T>(IEitherParameters<L, R, T> parameters)
+        public T Accept<T>(IEitherVisitor<L, R, T> visitor)
         {
-            return parameters.RunRight(right);
+            return visitor.VisitRight(right);
         }
 
         public override bool Equals(object obj)

@@ -14,17 +14,17 @@ namespace Ploeh.Samples.ChurchEncoding
             Func<L, L1> selectLeft,
             Func<R, R1> selectRight)
         {
-            return source.Match(
-                new SelectBothParameters<L, L1, R, R1>(selectLeft, selectRight));
+            return source.Accept(
+                new SelectBothVisitor<L, L1, R, R1>(selectLeft, selectRight));
         }
 
-        private class SelectBothParameters<L, L1, R, R1> :
-            IEitherParameters<L, R, IEither<L1, R1>>
+        private class SelectBothVisitor<L, L1, R, R1> :
+            IEitherVisitor<L, R, IEither<L1, R1>>
         {
             private readonly Func<L, L1> selectLeft;
             private readonly Func<R, R1> selectRight;
 
-            public SelectBothParameters(
+            public SelectBothVisitor(
                 Func<L, L1> selectLeft,
                 Func<R, R1> selectRight)
             {
@@ -32,12 +32,12 @@ namespace Ploeh.Samples.ChurchEncoding
                 this.selectRight = selectRight;
             }
 
-            public IEither<L1, R1> RunLeft(L left)
+            public IEither<L1, R1> VisitLeft(L left)
             {
                 return new Left<L1, R1>(selectLeft(left));
             }
 
-            public IEither<L1, R1> RunRight(R right)
+            public IEither<L1, R1> VisitRight(R right)
             {
                 return new Right<L1, R1>(selectRight(right));
             }
@@ -69,18 +69,18 @@ namespace Ploeh.Samples.ChurchEncoding
         public static IEither<L, R> Join<L, R>(
             this IEither<L, IEither<L, R>> source)
         {
-            return source.Match(new JoinParameters<L, R>());
+            return source.Accept(new JoinVisitor<L, R>());
         }
 
-        private class JoinParameters<L, R> :
-            IEitherParameters<L, IEither<L, R>, IEither<L, R>>
+        private class JoinVisitor<L, R> :
+            IEitherVisitor<L, IEither<L, R>, IEither<L, R>>
         {
-            public IEither<L, R> RunLeft(L left)
+            public IEither<L, R> VisitLeft(L left)
             {
                 return new Left<L, R>(left);
             }
 
-            public IEither<L, R> RunRight(IEither<L, R> right)
+            public IEither<L, R> VisitRight(IEither<L, R> right)
             {
                 return right;
             }
@@ -107,17 +107,17 @@ namespace Ploeh.Samples.ChurchEncoding
         // monoid
         public static T Bifold<T>(this IEither<T, T> source)
         {
-            return source.Match(new BifoldParameters<T>());
+            return source.Accept(new BifoldVisitor<T>());
         }
 
-        private class BifoldParameters<T> : IEitherParameters<T, T, T>
+        private class BifoldVisitor<T> : IEitherVisitor<T, T, T>
         {
-            public T RunLeft(T left)
+            public T VisitLeft(T left)
             {
                 return left;
             }
 
-            public T RunRight(T right)
+            public T VisitRight(T right)
             {
                 return right;
             }

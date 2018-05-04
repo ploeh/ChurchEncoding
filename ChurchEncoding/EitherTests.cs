@@ -13,7 +13,7 @@ namespace Ploeh.Samples.ChurchEncoding
         public void MatchRight()
         {
             IEither<string, int> sut = new Right<string, int>(42);
-            var actual = sut.Match(new MatchParameters());
+            var actual = sut.Accept(new MatchVisitor());
             Assert.Equal("42", actual);
         }
 
@@ -21,18 +21,18 @@ namespace Ploeh.Samples.ChurchEncoding
         public void MatchLeft()
         {
             IEither<string, int> sut = new Left<string, int>("foo");
-            var actual = sut.Match(new MatchParameters());
+            var actual = sut.Accept(new MatchVisitor());
             Assert.Equal("foo", actual);
         }
 
-        private class MatchParameters : IEitherParameters<string, int, string>
+        private class MatchVisitor : IEitherVisitor<string, int, string>
         {
-            public string RunLeft(string left)
+            public string VisitLeft(string left)
             {
                 return left;
             }
 
-            public string RunRight(int right)
+            public string VisitRight(int right)
             {
                 return right.ToString();
             }
@@ -84,17 +84,17 @@ namespace Ploeh.Samples.ChurchEncoding
         public void FindWinnerReturnsCorrectResult(string[] votes, string expected)
         {
             var actual = FindWinner(votes);
-            Assert.Equal(expected, actual.Match(new FindWinnerParameters()));
+            Assert.Equal(expected, actual.Accept(new FindWinnerVisitor()));
         }
 
-        private class FindWinnerParameters : IEitherParameters<VoteError, string, string>
+        private class FindWinnerVisitor : IEitherVisitor<VoteError, string, string>
         {
-            public string RunLeft(VoteError left)
+            public string VisitLeft(VoteError left)
             {
                 return left.ToString();
             }
 
-            public string RunRight(string right)
+            public string VisitRight(string right)
             {
                 return right;
             }

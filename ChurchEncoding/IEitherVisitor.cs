@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.ChurchEncoding
 {
-    public interface IEitherParameters<L, R, T>
+    public interface IEitherVisitor<L, R, T>
     {
-        T RunLeft(L left);
-        T RunRight(R right);
+        T VisitLeft(L left);
+        T VisitRight(R right);
     }
 }

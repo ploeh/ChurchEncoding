@@ -65,7 +65,7 @@
     <Compile Include="EitherTests.cs" />
     <Compile Include="IChurchBoolean.cs" />
     <Compile Include="IEither.cs" />
-    <Compile Include="IEitherParameters.cs" />
+    <Compile Include="IEitherVisitor.cs" />
     <Compile Include="IMaybe.cs" />
     <Compile Include="INaturalNumber.cs" />
     <Compile Include="Just.cs" />
