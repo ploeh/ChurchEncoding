@@ -64,8 +64,11 @@
     <Compile Include="IChurchBoolean.cs" />
     <Compile Include="IMaybe.cs" />
     <Compile Include="INaturalNumber.cs" />
+    <Compile Include="Just.cs" />
+    <Compile Include="MaybeTests.cs" />
     <Compile Include="NatualNumberTests.cs" />
     <Compile Include="NaturalNumber.cs" />
+    <Compile Include="Nothing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BooleanTests.cs" />
     <Compile Include="Successor.cs" />
