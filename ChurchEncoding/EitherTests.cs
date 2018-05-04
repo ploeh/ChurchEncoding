@@ -73,5 +73,101 @@ namespace Ploeh.Samples.ChurchEncoding
             var actual = FindWinner(votes);
             Assert.Equal(expected, actual.Match(ve => ve.ToString(), s => s));
         }
+
+        [Fact]
+        public void SelectLeft()
+        {
+            IEither<int, bool> sut = new Left<int, bool>(1337);
+            var actual = sut.SelectLeft(i => i % 2 != 0);
+            Assert.True(actual.Match(l => l, r => r));
+        }
+
+        [Fact]
+        public void SelectRight()
+        {
+            IEither<bool, string> sut = new Right<bool, string>("foo");
+            var actual = sut.SelectRight(s => s.StartsWith("f"));
+            Assert.True(actual.Match(l => l, r => r));
+        }
+
+        private static T Id<T>(T x) => x;
+
+        public static IEnumerable<object[]> BifunctorLawsData
+        {
+            get
+            {
+                yield return new[] { new  Left<string, int>("foo") };
+                yield return new[] { new  Left<string, int>("bar") };
+                yield return new[] { new  Left<string, int>("baz") };
+                yield return new[] { new Right<string, int>(   42) };
+                yield return new[] { new Right<string, int>( 1337) };
+                yield return new[] { new Right<string, int>(    0) };
+            }
+        }
+
+        [Theory, MemberData(nameof(BifunctorLawsData))]
+        public void SelectLeftObeysFirstFunctorLaw(IEither<string, int> e)
+        {
+            Assert.Equal(e, e.SelectLeft(Id));
+        }
+
+        [Theory, MemberData(nameof(BifunctorLawsData))]
+        public void SelectRightObeysFirstFunctorLaw(IEither<string, int> e)
+        {
+            Assert.Equal(e, e.SelectRight(Id));
+        }
+
+        [Theory, MemberData(nameof(BifunctorLawsData))]
+        public void SelectBothObeysIdentityLaw(IEither<string, int> e)
+        {
+            Assert.Equal(e, e.SelectBoth(Id, Id));
+        }
+
+        [Theory, MemberData(nameof(BifunctorLawsData))]
+        public void ConsistencyLawHolds(IEither<string, int> e)
+        {
+            bool f(string s) => string.IsNullOrWhiteSpace(s);
+            DateTime g(int i) => new DateTime(i);
+
+            Assert.Equal(e.SelectBoth(f, g), e.SelectRight(g).SelectLeft(f));
+            Assert.Equal(
+                e.SelectLeft(f).SelectRight(g),
+                e.SelectRight(g).SelectLeft(f));
+        }
+
+        [Theory, MemberData(nameof(BifunctorLawsData))]
+        public void SecondFunctorLawHoldsForSelectLeft(IEither<string, int> e)
+        {
+            bool f(int x) => x % 2 == 0;
+            int g(string s) => s.Length;
+
+            Assert.Equal(
+                e.SelectLeft(x => f(g(x))),
+                e.SelectLeft(g).SelectLeft(f));
+        }
+
+        [Theory, MemberData(nameof(BifunctorLawsData))]
+        public void SecondFunctorLawHoldsForSelectRight(IEither<string, int> e)
+        {
+            char f(bool b) => b ? 'T' : 'F';
+            bool g(int i) => i % 2 == 0;
+
+            Assert.Equal(
+                e.SelectRight(x => f(g(x))),
+                e.SelectRight(g).SelectRight(f));
+        }
+
+        [Theory, MemberData(nameof(BifunctorLawsData))]
+        public void SelectBothCompositionLawHolds(IEither<string, int> e)
+        {
+            bool f(int x) => x % 2 == 0;
+            int g(string s) => s.Length;
+            char h(bool b) => b ? 'T' : 'F';
+            bool i(int x) => x % 2 == 0;
+
+            Assert.Equal(
+                e.SelectBoth(x => f(g(x)), y => h(i(y))),
+                e.SelectBoth(g, i).SelectBoth(f, h));
+        }
     }
 }

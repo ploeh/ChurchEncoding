@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Ploeh.Samples.ChurchEncoding
 {
     [DebuggerDisplay("{ right }")]
-    public class Right<L, R> : IEither<L, R>
+    public sealed class Right<L, R> : IEither<L, R>
     {
         private readonly R right;
 
@@ -20,6 +20,19 @@ namespace Ploeh.Samples.ChurchEncoding
         public T Match<T>(Func<L, T> onLeft, Func<R, T> onRight)
         {
             return onRight(right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Right<L, R> other))
+                return false;
+
+            return Equals(right, other.right);
+        }
+
+        public override int GetHashCode()
+        {
+            return right.GetHashCode();
         }
     }
 }

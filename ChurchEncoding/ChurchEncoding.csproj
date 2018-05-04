@@ -61,6 +61,7 @@
     <Compile Include="ChurchNot.cs" />
     <Compile Include="ChurchOr.cs" />
     <Compile Include="ChurchTrue.cs" />
+    <Compile Include="Either.cs" />
     <Compile Include="EitherTests.cs" />
     <Compile Include="IChurchBoolean.cs" />
     <Compile Include="IEither.cs" />
