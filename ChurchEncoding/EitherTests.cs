@@ -169,5 +169,13 @@ namespace Ploeh.Samples.ChurchEncoding
                 e.SelectBoth(x => f(g(x)), y => h(i(y))),
                 e.SelectBoth(g, i).SelectBoth(f, h));
         }
+
+        [Fact]
+        public void UseSimpleQuerySyntax()
+        {
+            var actual = from s in new Right<Guid, string>("foo")
+                         select s.Length;
+            Assert.Equal(3, actual.Match(g => g.ToString().Length, s => s));
+        }
     }
 }

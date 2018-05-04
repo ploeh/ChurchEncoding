@@ -32,5 +32,13 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             return source.SelectBoth(l => l, selector);
         }
+
+        // Functor
+        public static IEither<L, R1> Select<L, R, R1>(
+            this IEither<L, R> source,
+            Func<R, R1> selector)
+        {
+            return source.SelectRight(selector);
+        }
     }
 }
