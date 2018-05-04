@@ -13,9 +13,7 @@ namespace Ploeh.Samples.ChurchEncoding
         public void MatchRight()
         {
             IEither<string, int> sut = new Right<string, int>(42);
-            var actual = sut.Match(
-                new EitherParameters<string, int, string>(
-                    s => s, i => i.ToString()));
+            var actual = sut.Match(new MatchParameters());
             Assert.Equal("42", actual);
         }
 
@@ -23,10 +21,21 @@ namespace Ploeh.Samples.ChurchEncoding
         public void MatchLeft()
         {
             IEither<string, int> sut = new Left<string, int>("foo");
-            var actual = sut.Match(
-                new EitherParameters<string, int, string>(
-                    s => s, i => i.ToString()));
+            var actual = sut.Match(new MatchParameters());
             Assert.Equal("foo", actual);
+        }
+
+        private class MatchParameters : IEitherParameters<string, int, string>
+        {
+            public string RunLeft(string left)
+            {
+                return left;
+            }
+
+            public string RunRight(int right)
+            {
+                return right.ToString();
+            }
         }
 
         public enum VoteError
@@ -75,7 +84,20 @@ namespace Ploeh.Samples.ChurchEncoding
         public void FindWinnerReturnsCorrectResult(string[] votes, string expected)
         {
             var actual = FindWinner(votes);
-            Assert.Equal(expected, actual.Match(ve => ve.ToString(), s => s));
+            Assert.Equal(expected, actual.Match(new FindWinnerParameters()));
+        }
+
+        private class FindWinnerParameters : IEitherParameters<VoteError, string, string>
+        {
+            public string RunLeft(VoteError left)
+            {
+                return left.ToString();
+            }
+
+            public string RunRight(string right)
+            {
+                return right;
+            }
         }
 
         [Fact]
@@ -83,8 +105,7 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             IEither<int, bool> sut = new Left<int, bool>(1337);
             var actual = sut.SelectLeft(i => i % 2 != 0);
-            Assert.True(actual.Match(
-                new EitherParameters<bool, bool, bool>(l => l, r => r)));
+            Assert.True(actual.Bifold());
         }
 
         [Fact]
@@ -92,8 +113,7 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             IEither<bool, string> sut = new Right<bool, string>("foo");
             var actual = sut.SelectRight(s => s.StartsWith("f"));
-            Assert.True(actual.Match(
-                new EitherParameters<bool, bool, bool>(l => l, r => r)));
+            Assert.True(actual.Bifold());
         }
 
         private static T Id<T>(T x) => x;
@@ -181,9 +201,9 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             var actual = from s in new Right<Guid, string>("foo")
                          select s.Length;
-            Assert.Equal(3, actual.Match(
-                new EitherParameters<Guid, int, int>(
-                    g => g.ToString().Length, s => s)));
+            Assert.Equal(
+                3,
+                actual.SelectLeft(g => g.ToString().Length).Bifold());
         }
 
         [Fact]
@@ -192,9 +212,7 @@ namespace Ploeh.Samples.ChurchEncoding
             var actual = from x in new Right<string, int>(42)
                          from y in new Left<string, double>("foo")
                          select Math.Pow(x, y);
-            Assert.Equal("foo", actual.Match(
-                new EitherParameters<string, double, string>(
-                    l => l, _ => "bar")));
+            Assert.Equal("foo", actual.Select(_ => "bar").Bifold());
         }
     }
 }

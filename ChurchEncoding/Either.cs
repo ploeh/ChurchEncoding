@@ -14,10 +14,33 @@ namespace Ploeh.Samples.ChurchEncoding
             Func<L, L1> selectLeft,
             Func<R, R1> selectRight)
         {
-            return source.Match<IEither<L1, R1>>(
-                new EitherParameters<L, R, IEither<L1, R1>>(
-                    runLeft:  l => new Left<L1, R1>(selectLeft(l)),
-                    runRight: r => new Right<L1, R1>(selectRight(r))));
+            return source.Match(
+                new SelectBothParameters<L, L1, R, R1>(selectLeft, selectRight));
+        }
+
+        private class SelectBothParameters<L, L1, R, R1> :
+            IEitherParameters<L, R, IEither<L1, R1>>
+        {
+            private readonly Func<L, L1> selectLeft;
+            private readonly Func<R, R1> selectRight;
+
+            public SelectBothParameters(
+                Func<L, L1> selectLeft,
+                Func<R, R1> selectRight)
+            {
+                this.selectLeft = selectLeft;
+                this.selectRight = selectRight;
+            }
+
+            public IEither<L1, R1> RunLeft(L left)
+            {
+                return new Left<L1, R1>(selectLeft(left));
+            }
+
+            public IEither<L1, R1> RunRight(R right)
+            {
+                return new Right<L1, R1>(selectRight(right));
+            }
         }
 
         public static IEither<L1, R> SelectLeft<L, L1, R>(
@@ -46,10 +69,21 @@ namespace Ploeh.Samples.ChurchEncoding
         public static IEither<L, R> Join<L, R>(
             this IEither<L, IEither<L, R>> source)
         {
-            return source.Match(
-                new EitherParameters<L, IEither<L, R>, IEither<L, R>>(
-                    runLeft:  l => new Left<L, R>(l),
-                    runRight: r => r));
+            return source.Match(new JoinParameters<L, R>());
+        }
+
+        private class JoinParameters<L, R> :
+            IEitherParameters<L, IEither<L, R>, IEither<L, R>>
+        {
+            public IEither<L, R> RunLeft(L left)
+            {
+                return new Left<L, R>(left);
+            }
+
+            public IEither<L, R> RunRight(IEither<L, R> right)
+            {
+                return right;
+            }
         }
 
         public static IEither<L, R1> SelectMany<L, R, R1>(
@@ -67,6 +101,26 @@ namespace Ploeh.Samples.ChurchEncoding
             return source
                 .SelectMany(x => k(x)
                     .SelectMany(y => new Right<L, R1>(s(x, y))));
+        }
+
+        // Bifoldable - sort of... Really, the T involved should give rise to a
+        // monoid
+        public static T Bifold<T>(this IEither<T, T> source)
+        {
+            return source.Match(new BifoldParameters<T>());
+        }
+
+        private class BifoldParameters<T> : IEitherParameters<T, T, T>
+        {
+            public T RunLeft(T left)
+            {
+                return left;
+            }
+
+            public T RunRight(T right)
+            {
+                return right;
+            }
         }
     }
 }
