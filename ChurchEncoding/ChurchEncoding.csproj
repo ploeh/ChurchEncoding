@@ -62,6 +62,7 @@
     <Compile Include="ChurchOr.cs" />
     <Compile Include="ChurchTrue.cs" />
     <Compile Include="IChurchBoolean.cs" />
+    <Compile Include="IEither.cs" />
     <Compile Include="IMaybe.cs" />
     <Compile Include="INaturalNumber.cs" />
     <Compile Include="Just.cs" />
