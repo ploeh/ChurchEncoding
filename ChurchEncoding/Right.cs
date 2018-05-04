@@ -17,9 +17,9 @@ namespace Ploeh.Samples.ChurchEncoding
             this.right = right;
         }
 
-        public T Match<T>(Func<L, T> onLeft, Func<R, T> onRight)
+        public T Match<T>(EitherParameters<L, R, T> parameters)
         {
-            return onRight(right);
+            return parameters.RunRight(right);
         }
 
         public override bool Equals(object obj)

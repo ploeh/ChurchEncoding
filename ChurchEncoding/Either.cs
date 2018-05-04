@@ -15,8 +15,9 @@ namespace Ploeh.Samples.ChurchEncoding
             Func<R, R1> selectRight)
         {
             return source.Match<IEither<L1, R1>>(
-                onLeft:  l => new Left<L1, R1>(selectLeft(l)),
-                onRight: r => new Right<L1, R1>(selectRight(r)));
+                new EitherParameters<L, R, IEither<L1, R1>>(
+                    runLeft:  l => new Left<L1, R1>(selectLeft(l)),
+                    runRight: r => new Right<L1, R1>(selectRight(r))));
         }
 
         public static IEither<L1, R> SelectLeft<L, L1, R>(
@@ -46,8 +47,9 @@ namespace Ploeh.Samples.ChurchEncoding
             this IEither<L, IEither<L, R>> source)
         {
             return source.Match(
-                onLeft:  l => new Left<L, R>(l),
-                onRight: r => r);
+                new EitherParameters<L, IEither<L, R>, IEither<L, R>>(
+                    runLeft:  l => new Left<L, R>(l),
+                    runRight: r => r));
         }
 
         public static IEither<L, R1> SelectMany<L, R, R1>(

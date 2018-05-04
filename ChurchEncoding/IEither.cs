@@ -8,6 +8,6 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public interface IEither<L, R>
     {
-        T Match<T>(Func<L, T> onLeft, Func<R, T> onRight);
+        T Match<T>(EitherParameters<L, R, T> parameters);
     }
 }

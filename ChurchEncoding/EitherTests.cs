@@ -13,7 +13,9 @@ namespace Ploeh.Samples.ChurchEncoding
         public void MatchRight()
         {
             IEither<string, int> sut = new Right<string, int>(42);
-            var actual = sut.Match(s => s, i => i.ToString());
+            var actual = sut.Match(
+                new EitherParameters<string, int, string>(
+                    s => s, i => i.ToString()));
             Assert.Equal("42", actual);
         }
 
@@ -21,7 +23,9 @@ namespace Ploeh.Samples.ChurchEncoding
         public void MatchLeft()
         {
             IEither<string, int> sut = new Left<string, int>("foo");
-            var actual = sut.Match(s => s, i => i.ToString());
+            var actual = sut.Match(
+                new EitherParameters<string, int, string>(
+                    s => s, i => i.ToString()));
             Assert.Equal("foo", actual);
         }
 
@@ -79,7 +83,8 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             IEither<int, bool> sut = new Left<int, bool>(1337);
             var actual = sut.SelectLeft(i => i % 2 != 0);
-            Assert.True(actual.Match(l => l, r => r));
+            Assert.True(actual.Match(
+                new EitherParameters<bool, bool, bool>(l => l, r => r)));
         }
 
         [Fact]
@@ -87,7 +92,8 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             IEither<bool, string> sut = new Right<bool, string>("foo");
             var actual = sut.SelectRight(s => s.StartsWith("f"));
-            Assert.True(actual.Match(l => l, r => r));
+            Assert.True(actual.Match(
+                new EitherParameters<bool, bool, bool>(l => l, r => r)));
         }
 
         private static T Id<T>(T x) => x;
@@ -175,7 +181,9 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             var actual = from s in new Right<Guid, string>("foo")
                          select s.Length;
-            Assert.Equal(3, actual.Match(g => g.ToString().Length, s => s));
+            Assert.Equal(3, actual.Match(
+                new EitherParameters<Guid, int, int>(
+                    g => g.ToString().Length, s => s)));
         }
 
         [Fact]
@@ -184,7 +192,9 @@ namespace Ploeh.Samples.ChurchEncoding
             var actual = from x in new Right<string, int>(42)
                          from y in new Left<string, double>("foo")
                          select Math.Pow(x, y);
-            Assert.Equal("foo", actual.Match(l => l, _ => "bar"));
+            Assert.Equal("foo", actual.Match(
+                new EitherParameters<string, double, string>(
+                    l => l, _ => "bar")));
         }
     }
 }
