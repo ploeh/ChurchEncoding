@@ -199,11 +199,9 @@ namespace Ploeh.Samples.ChurchEncoding
         [Fact]
         public void UseSimpleQuerySyntax()
         {
-            var actual = from s in new Right<Guid, string>("foo")
-                         select s.Length;
-            Assert.Equal(
-                3,
-                actual.SelectLeft(g => g.ToString().Length).Bifold());
+            IEither<Guid, int> actual = from s in new Right<Guid, string>("foo")
+                                        select s.Length;
+            Assert.Equal(new Right<Guid, int>(3), actual);
         }
 
         [Fact]
