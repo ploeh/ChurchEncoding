@@ -205,6 +205,15 @@ namespace Ploeh.Samples.ChurchEncoding
         }
 
         [Fact]
+        public void FindWinnerQuerySyntaxExample()
+        {
+            IEither<VoteError, bool> isVotePositive =
+                from i in FindWinner(1, 2, -3, -1, 2, -1, -1)
+                select i > 0;
+            Assert.Equal(new Right<VoteError, bool>(false), isVotePositive);
+        }
+
+        [Fact]
         public void UseCartesianQuerySyntax()
         {
             var actual = from x in new Right<string, int>(42)
