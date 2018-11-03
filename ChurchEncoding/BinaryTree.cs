@@ -30,36 +30,13 @@ namespace Ploeh.Samples.ChurchEncoding
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            var visitor = new SelectBinaryTreeVisitor<T, TResult>(selector);
+            var visitor = new BinaryTreeVisitor<T, IBinaryTree<TResult>>(
+                node => Create(
+                    selector(node.Item),
+                    node.Left.Select(selector),
+                    node.Right.Select(selector)),
+                leaf => Leaf(selector(leaf.Item)));
             return tree.Accept(visitor);
-        }
-
-        private class SelectBinaryTreeVisitor<T, TResult> :
-            IBinaryTreeVisitor<T, IBinaryTree<TResult>>
-        {
-            private readonly Func<T, TResult> selector;
-
-            public SelectBinaryTreeVisitor(Func<T, TResult> selector)
-            {
-                if (selector == null)
-                    throw new ArgumentNullException(nameof(selector));
-
-                this.selector = selector;
-            }
-
-            public IBinaryTree<TResult> Visit(Leaf<T> leaf)
-            {
-                var mappedItem = selector(leaf.Item);
-                return Leaf(mappedItem);
-            }
-
-            public IBinaryTree<TResult> Visit(Node<T> node)
-            {
-                var mappedItem = selector(node.Item);
-                var mappedLeft = node.Left.Accept(this);
-                var mappedRight = node.Right.Accept(this);
-                return Create(mappedItem, mappedLeft, mappedRight);
-            }
         }
     }
 }
