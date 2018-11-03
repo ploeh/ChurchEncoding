@@ -55,6 +55,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryTree.cs" />
+    <Compile Include="BinaryTreeTests.cs" />
     <Compile Include="ChurchAnd.cs" />
     <Compile Include="ChurchBoolean.cs" />
     <Compile Include="ChurchBooleanVisitor.cs" />
@@ -64,6 +66,8 @@
     <Compile Include="ChurchTrue.cs" />
     <Compile Include="Either.cs" />
     <Compile Include="EitherTests.cs" />
+    <Compile Include="IBinaryTree.cs" />
+    <Compile Include="IBinaryTreeVisitor.cs" />
     <Compile Include="IChurchBoolean.cs" />
     <Compile Include="IEither.cs" />
     <Compile Include="IEitherVisitor.cs" />
@@ -77,6 +81,8 @@
     <Compile Include="NatualNumberTests.cs" />
     <Compile Include="NaturalNumber.cs" />
     <Compile Include="INaturalNumberVisitor.cs" />
+    <Compile Include="Leaf.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="Nothing.cs" />
     <Compile Include="PaymentExample\Child.cs" />
     <Compile Include="PaymentExample\ChildPaymentService.cs" />
