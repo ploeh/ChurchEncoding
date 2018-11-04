@@ -26,12 +26,11 @@ namespace Ploeh.Samples.ChurchEncoding
             Right = right;
         }
 
-        public TResult Accept<TResult>(BinaryTreeVisitor<T, TResult> visitor)
+        public TResult Accept<TResult>(
+            Func<Node<T>, TResult> visitNode,
+            Func<Leaf<T>, TResult> visitLeaf)
         {
-            if (visitor == null)
-                throw new ArgumentNullException(nameof(visitor));
-
-            return visitor.VisitNode(this);
+            return visitNode(this);
         }
 
         public override bool Equals(object obj)

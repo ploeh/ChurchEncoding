@@ -30,13 +30,12 @@ namespace Ploeh.Samples.ChurchEncoding
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            var visitor = new BinaryTreeVisitor<T, IBinaryTree<TResult>>(
+            return tree.Accept(
                 node => Create(
                     selector(node.Item),
                     node.Left.Select(selector),
                     node.Right.Select(selector)),
                 leaf => Leaf(selector(leaf.Item)));
-            return tree.Accept(visitor);
         }
     }
 }

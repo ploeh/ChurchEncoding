@@ -67,7 +67,6 @@
     <Compile Include="Either.cs" />
     <Compile Include="EitherTests.cs" />
     <Compile Include="IBinaryTree.cs" />
-    <Compile Include="BinaryTreeVisitor.cs" />
     <Compile Include="IChurchBoolean.cs" />
     <Compile Include="IEither.cs" />
     <Compile Include="IEitherVisitor.cs" />
