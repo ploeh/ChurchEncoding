@@ -98,5 +98,77 @@ namespace Ploeh.Samples.ChurchEncoding
 
             Assert.Equal(tree.Select(g).Select(f), tree.Select(i => f(g(i))));
         }
+
+        [Fact]
+        public void SumOfNodes()
+        {
+            var tree =
+                BinaryTree.Create(
+                    BinaryTree.Create(
+                        BinaryTree.Leaf(42),
+                        1337,
+                        BinaryTree.Create(
+                            BinaryTree.Leaf(2112),
+                            5040,
+                            BinaryTree.Leaf(1984))),
+                    2,
+                    BinaryTree.Leaf(90125));
+            var actual = tree.Sum();
+            Assert.Equal(100642, actual);
+        }
+
+        [Fact]
+        public void MaxNodes()
+        {
+            var tree =
+                BinaryTree.Create(
+                    BinaryTree.Create(
+                        BinaryTree.Leaf(42),
+                        1337,
+                        BinaryTree.Create(
+                            BinaryTree.Leaf(2112),
+                            5040,
+                            BinaryTree.Leaf(1984))),
+                    2,
+                    BinaryTree.Leaf(90125));
+            var actual = tree.Max();
+            Assert.Equal(90125, actual);
+        }
+
+        [Fact]
+        public void CountLeaves()
+        {
+            var tree =
+                BinaryTree.Create(
+                    BinaryTree.Create(
+                        BinaryTree.Leaf(42),
+                        1337,
+                        BinaryTree.Create(
+                            BinaryTree.Leaf(2112),
+                            5040,
+                            BinaryTree.Leaf(1984))),
+                    2,
+                    BinaryTree.Leaf(90125));
+            var actual = tree.CountLeaves();
+            Assert.Equal(4, actual);
+        }
+
+        [Fact]
+        public void MeasureDepth()
+        {
+            var tree =
+                BinaryTree.Create(
+                    BinaryTree.Create(
+                        BinaryTree.Leaf(42),
+                        1337,
+                        BinaryTree.Create(
+                            BinaryTree.Leaf(2112),
+                            5040,
+                            BinaryTree.Leaf(1984))),
+                    2,
+                    BinaryTree.Leaf(90125));
+            var actual = tree.MeasureDepth();
+            Assert.Equal(3, actual);
+        }
     }
 }
