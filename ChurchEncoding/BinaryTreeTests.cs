@@ -13,10 +13,12 @@ namespace Ploeh.Samples.ChurchEncoding
         public void BasicBinaryTreeExample()
         {
             var source =
-                BinaryTree.Create(42,
-                    BinaryTree.Create(1337,
+                BinaryTree.Create(
+                    BinaryTree.Create(
                         BinaryTree.Leaf(0),
+                        1337,
                         BinaryTree.Leaf(-22)),
+                    42,
                     BinaryTree.Leaf(100));
 
             IBinaryTree<string> dest = source.Select(i => i.ToString());
@@ -28,10 +30,12 @@ namespace Ploeh.Samples.ChurchEncoding
         public void BinaryTreeQuerySyntaxExample()
         {
             var source =
-                BinaryTree.Create(42,
-                    BinaryTree.Create(1337,
+                BinaryTree.Create(
+                    BinaryTree.Create(
                         BinaryTree.Leaf(0),
+                        1337,
                         BinaryTree.Leaf(-22)),
+                    42,
                     BinaryTree.Leaf(100));
 
             IBinaryTree<string> dest = from i in source
@@ -46,28 +50,36 @@ namespace Ploeh.Samples.ChurchEncoding
             {
                 yield return new[] { BinaryTree.Leaf(0) };
                 yield return new[] {
-                    BinaryTree.Create(-3,
+                    BinaryTree.Create(
                         BinaryTree.Leaf(2),
+                        -3,
                         BinaryTree.Leaf(99)) };
                 yield return new[] {
-                    BinaryTree.Create(42,
-                        BinaryTree.Create(1337,
+                    BinaryTree.Create(
+                        BinaryTree.Create(
                             BinaryTree.Leaf(0),
+                            1337,
                             BinaryTree.Leaf(-22)),
+                        42,
                         BinaryTree.Leaf(100)) };
                 yield return new[] {
-                    BinaryTree.Create(-927,
+                    BinaryTree.Create(
                         BinaryTree.Leaf(2),
-                        BinaryTree.Create(211,
+                        -927,
+                        BinaryTree.Create(
                             BinaryTree.Leaf(88),
+                            211,
                             BinaryTree.Leaf(132))) };
                 yield return new[] {
-                    BinaryTree.Create(111,
-                        BinaryTree.Create(-336,
+                    BinaryTree.Create(
+                        BinaryTree.Create(
                             BinaryTree.Leaf(113),
+                            -336,
                             BinaryTree.Leaf(-432)),
-                        BinaryTree.Create(1299,
+                        111,
+                        BinaryTree.Create(
                             BinaryTree.Leaf(-32),
+                            1299,
                             BinaryTree.Leaf(773))) };
             }
         }

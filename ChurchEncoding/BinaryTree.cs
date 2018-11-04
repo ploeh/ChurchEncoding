@@ -14,11 +14,11 @@ namespace Ploeh.Samples.ChurchEncoding
         }
 
         public static IBinaryTree<T> Create<T>(
-            T item,
             IBinaryTree<T> left,
+            T item,
             IBinaryTree<T> right)
         {
-            return new Node<T>(item, left, right);
+            return new Node<T>(left, item, right);
         }
 
         public static IBinaryTree<TResult> Select<TResult, T>(
@@ -31,7 +31,7 @@ namespace Ploeh.Samples.ChurchEncoding
                 throw new ArgumentNullException(nameof(selector));
 
             return tree.Match(
-                node: (l, x, r) => Create(selector(x), l, r),
+                node: (l, x, r) => Create(l, selector(x), r),
                 leaf: x => Leaf(selector(x)));
         }
     }

@@ -8,21 +8,21 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public sealed class Node<T> : IBinaryTree<T>
     {
-        private readonly T item;
         private readonly IBinaryTree<T> left;
+        private readonly T item;
         private readonly IBinaryTree<T> right;
 
-        public Node(T item, IBinaryTree<T> left, IBinaryTree<T> right)
+        public Node(IBinaryTree<T> left, T item, IBinaryTree<T> right)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
             if (left == null)
                 throw new ArgumentNullException(nameof(left));
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
             if (right == null)
                 throw new ArgumentNullException(nameof(right));
 
-            this.item = item;
             this.left = left;
+            this.item = item;
             this.right = right;
         }
 
@@ -38,14 +38,14 @@ namespace Ploeh.Samples.ChurchEncoding
             if (!(obj is Node<T> other))
                 return false;
 
-            return Equals(item, other.item)
-                && Equals(left, other.left)
+            return Equals(left, other.left)
+                && Equals(item, other.item)
                 && Equals(right, other.right);
         }
 
         public override int GetHashCode()
         {
-            return item.GetHashCode() ^ left.GetHashCode() ^ right.GetHashCode();
+            return left.GetHashCode() ^ item.GetHashCode() ^ right.GetHashCode();
         }
     }
 }
