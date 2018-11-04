@@ -26,11 +26,11 @@ namespace Ploeh.Samples.ChurchEncoding
             Right = right;
         }
 
-        public TResult Accept<TResult>(
-            Func<Node<T>, TResult> visitNode,
-            Func<Leaf<T>, TResult> visitLeaf)
+        public TResult Match<TResult>(
+            Func<Node<T>, TResult> node,
+            Func<Leaf<T>, TResult> leaf)
         {
-            return visitNode(this);
+            return node(this);
         }
 
         public override bool Equals(object obj)

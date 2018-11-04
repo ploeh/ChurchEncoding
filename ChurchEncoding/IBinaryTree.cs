@@ -8,8 +8,8 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public interface IBinaryTree<T>
     {
-        TResult Accept<TResult>(
-            Func<Node<T>, TResult> visitNode,
-            Func<Leaf<T>, TResult> visitLeaf);
+        TResult Match<TResult>(
+            Func<Node<T>, TResult> node,
+            Func<Leaf<T>, TResult> leaf);
     }
 }

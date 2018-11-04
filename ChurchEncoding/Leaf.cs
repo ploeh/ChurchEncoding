@@ -18,11 +18,11 @@ namespace Ploeh.Samples.ChurchEncoding
             Item = item;
         }
 
-        public TResult Accept<TResult>(
-            Func<Node<T>, TResult> visitNode,
-            Func<Leaf<T>, TResult> visitLeaf)
+        public TResult Match<TResult>(
+            Func<Node<T>, TResult> node,
+            Func<Leaf<T>, TResult> leaf)
         {
-            return visitLeaf(this);
+            return leaf(this);
         }
 
         public override bool Equals(object obj)

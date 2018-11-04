@@ -30,7 +30,7 @@ namespace Ploeh.Samples.ChurchEncoding
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return tree.Accept(
+            return tree.Match(
                 node => Create(
                     selector(node.Item),
                     node.Left.Select(selector),
