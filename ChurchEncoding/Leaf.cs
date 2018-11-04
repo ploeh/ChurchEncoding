@@ -8,21 +8,21 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public sealed class Leaf<T> : IBinaryTree<T>
     {
-        public T Item { get; }
+        private readonly T item;
 
         public Leaf(T item)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
 
-            Item = item;
+            this.item = item;
         }
 
         public TResult Match<TResult>(
             Func<Node<T>, TResult> node,
-            Func<Leaf<T>, TResult> leaf)
+            Func<T, TResult> leaf)
         {
-            return leaf(this);
+            return leaf(item);
         }
 
         public override bool Equals(object obj)
@@ -30,12 +30,12 @@ namespace Ploeh.Samples.ChurchEncoding
             if (!(obj is Leaf<T> other))
                 return false;
 
-            return Equals(Item, other.Item);
+            return Equals(item, other.item);
         }
 
         public override int GetHashCode()
         {
-            return Item.GetHashCode();
+            return item.GetHashCode();
         }
     }
 }

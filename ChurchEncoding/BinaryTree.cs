@@ -35,7 +35,7 @@ namespace Ploeh.Samples.ChurchEncoding
                     selector(node.Item),
                     node.Left.Select(selector),
                     node.Right.Select(selector)),
-                leaf => Leaf(selector(leaf.Item)));
+                leaf: x => Leaf(selector(x)));
         }
     }
 }

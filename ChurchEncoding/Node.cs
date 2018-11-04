@@ -28,7 +28,7 @@ namespace Ploeh.Samples.ChurchEncoding
 
         public TResult Match<TResult>(
             Func<Node<T>, TResult> node,
-            Func<Leaf<T>, TResult> leaf)
+            Func<T, TResult> leaf)
         {
             return node(this);
         }
