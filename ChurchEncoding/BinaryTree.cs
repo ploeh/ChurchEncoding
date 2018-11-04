@@ -31,10 +31,7 @@ namespace Ploeh.Samples.ChurchEncoding
                 throw new ArgumentNullException(nameof(selector));
 
             return tree.Match(
-                node => Create(
-                    selector(node.Item),
-                    node.Left.Select(selector),
-                    node.Right.Select(selector)),
+                node: (l, x, r) => Create(selector(x), l, r),
                 leaf: x => Leaf(selector(x)));
         }
     }

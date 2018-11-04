@@ -21,7 +21,7 @@ namespace Ploeh.Samples.ChurchEncoding
 
             IBinaryTree<string> dest = source.Select(i => i.ToString());
 
-            Assert.Equal("42", ((Node<string>)dest).Item);
+            Assert.Equal("42", dest.Match((_l, x, _r) => x, x => x));
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace Ploeh.Samples.ChurchEncoding
             IBinaryTree<string> dest = from i in source
                                        select i.ToString();
 
-            Assert.Equal("42", ((Node<string>)dest).Item);
+            Assert.Equal("42", dest.Match((_l, x, _r) => x, x => x));
         }
 
         public static IEnumerable<object[]> Trees

@@ -8,9 +8,9 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public sealed class Node<T> : IBinaryTree<T>
     {
-        public T Item { get; }
-        public IBinaryTree<T> Left { get; }
-        public IBinaryTree<T> Right { get; }
+        private readonly T item;
+        private readonly IBinaryTree<T> left;
+        private readonly IBinaryTree<T> right;
 
         public Node(T item, IBinaryTree<T> left, IBinaryTree<T> right)
         {
@@ -21,16 +21,16 @@ namespace Ploeh.Samples.ChurchEncoding
             if (right == null)
                 throw new ArgumentNullException(nameof(right));
 
-            Item = item;
-            Left = left;
-            Right = right;
+            this.item = item;
+            this.left = left;
+            this.right = right;
         }
 
         public TResult Match<TResult>(
-            Func<Node<T>, TResult> node,
+            Func<TResult, T, TResult, TResult> node,
             Func<T, TResult> leaf)
         {
-            return node(this);
+            return node(left.Match(node, leaf), item, right.Match(node, leaf));
         }
 
         public override bool Equals(object obj)
@@ -38,14 +38,14 @@ namespace Ploeh.Samples.ChurchEncoding
             if (!(obj is Node<T> other))
                 return false;
 
-            return Equals(Item, other.Item)
-                && Equals(Left, other.Left)
-                && Equals(Right, other.Right);
+            return Equals(item, other.item)
+                && Equals(left, other.left)
+                && Equals(right, other.right);
         }
 
         public override int GetHashCode()
         {
-            return Item.GetHashCode() ^ Left.GetHashCode() ^ Right.GetHashCode();
+            return item.GetHashCode() ^ left.GetHashCode() ^ right.GetHashCode();
         }
     }
 }

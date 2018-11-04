@@ -19,7 +19,7 @@ namespace Ploeh.Samples.ChurchEncoding
         }
 
         public TResult Match<TResult>(
-            Func<Node<T>, TResult> node,
+            Func<TResult, T, TResult, TResult> node,
             Func<T, TResult> leaf)
         {
             return leaf(item);
