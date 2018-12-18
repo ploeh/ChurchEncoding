@@ -20,10 +20,9 @@ namespace Ploeh.Samples.ChurchEncoding
         }
 
         public TResult Match<TResult>(
-            Func<N, IEnumerable<IRoseTree<N, L>>, TResult> node,
-            Func<L, TResult> leaf)
+            RoseTreeParameters<N, L, TResult> parameters)
         {
-            return node(value, branches);
+            return parameters.Node(value, branches);
         }
 
         public override bool Equals(object obj)

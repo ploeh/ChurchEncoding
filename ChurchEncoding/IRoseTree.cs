@@ -8,8 +8,6 @@ namespace Ploeh.Samples.ChurchEncoding
 {
     public interface IRoseTree<N, L>
     {
-        TResult Match<TResult>(
-            Func<N, IEnumerable<IRoseTree<N, L>>, TResult> node,
-            Func<L, TResult> leaf);
+        TResult Match<TResult>(RoseTreeParameters<N, L, TResult> parameters);
     }
 }

@@ -18,8 +18,9 @@ namespace Ploeh.Samples.ChurchEncoding
         public static IChurchBoolean IsLeaf<N, L>(this IRoseTree<N, L> source)
         {
             return source.Match<IChurchBoolean>(
-                node: (_, __) => new ChurchFalse(),
-                leaf: _ => new ChurchTrue());
+                new RoseTreeParameters<N, L, IChurchBoolean>(
+                    node: (_, __) => new ChurchFalse(),
+                    leaf: _ => new ChurchTrue()));
         }
 
         public static IChurchBoolean IsNode<N, L>(this IRoseTree<N, L> source)
@@ -33,8 +34,9 @@ namespace Ploeh.Samples.ChurchEncoding
             Func<L, TResult> leaf)
         {
             return tree.Match(
-                node: (n, branches) => node(n, branches.Select(t => t.Cata(node, leaf))),
-                leaf: leaf);
+                new RoseTreeParameters<N, L, TResult>(
+                    node: (n, branches) => node(n, branches.Select(t => t.Cata(node, leaf))),
+                    leaf: leaf));
         }
 
         // Bifunctor
