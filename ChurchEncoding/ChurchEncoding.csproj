@@ -96,7 +96,7 @@
     <Compile Include="BooleanTests.cs" />
     <Compile Include="Right.cs" />
     <Compile Include="RoseTree.cs" />
-    <Compile Include="RoseTreeParameters.cs" />
+    <Compile Include="IRoseTreeParameters.cs" />
     <Compile Include="RoseTreeTests.cs" />
     <Compile Include="Successor.cs" />
     <Compile Include="Zero.cs" />

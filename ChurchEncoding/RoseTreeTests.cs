@@ -13,12 +13,24 @@ namespace Ploeh.Samples.ChurchEncoding
         public void MatchLeaf()
         {
             IRoseTree<string, int> tree = new RoseLeaf<string, int>(42);
-            int actual =
-                tree.Match(
-                    new RoseTreeParameters<string, int, int>(
-                        (x, xs) => -1,
-                        x => x));
+            int actual = tree.Match(new MatchIntLeafParameters());
             Assert.Equal(42, actual);
+        }
+
+        private class MatchIntLeafParameters :
+            IRoseTreeParameters<string, int, int>
+        {
+            public int RunLeaf(int leaf)
+            {
+                return leaf;
+            }
+
+            public int RunNode(
+                string node,
+                IEnumerable<IRoseTree<string, int>> branches)
+            {
+                return -1;
+            }
         }
 
         [Fact]
@@ -28,12 +40,24 @@ namespace Ploeh.Samples.ChurchEncoding
                 RoseTree.Node("foo",
                     new RoseLeaf<string, int>(42),
                     new RoseLeaf<string, int>(1337));
-            int actual =
-                tree.Match(
-                    new RoseTreeParameters<string, int, int>(
-                        (x, _) => x.Length,
-                        x => x));
+            int actual = tree.Match(new MatchStringNodeParameters());
             Assert.Equal(3, actual);
+        }
+
+        private class MatchStringNodeParameters :
+            IRoseTreeParameters<string, int, int>
+        {
+            public int RunLeaf(int leaf)
+            {
+                return leaf;
+            }
+
+            public int RunNode(
+                string node,
+                IEnumerable<IRoseTree<string, int>> branches)
+            {
+                return node.Length;
+            }
         }
 
         [Fact]

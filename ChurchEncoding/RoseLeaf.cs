@@ -18,9 +18,9 @@ namespace Ploeh.Samples.ChurchEncoding
         }
 
         public TResult Match<TResult>(
-            RoseTreeParameters<N, L, TResult> parameters)
+            IRoseTreeParameters<N, L, TResult> parameters)
         {
-            return parameters.Leaf(value);
+            return parameters.RunLeaf(value);
         }
 
         public override bool Equals(object obj)

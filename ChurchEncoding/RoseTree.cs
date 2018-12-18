@@ -17,10 +17,22 @@ namespace Ploeh.Samples.ChurchEncoding
 
         public static IChurchBoolean IsLeaf<N, L>(this IRoseTree<N, L> source)
         {
-            return source.Match<IChurchBoolean>(
-                new RoseTreeParameters<N, L, IChurchBoolean>(
-                    node: (_, __) => new ChurchFalse(),
-                    leaf: _ => new ChurchTrue()));
+            return source.Match(new IsLeafParameters<N, L>());
+        }
+
+        private class IsLeafParameters<N, L> :
+            IRoseTreeParameters<N, L, IChurchBoolean>
+        {
+            public IChurchBoolean RunLeaf(L leaf)
+            {
+                return new ChurchTrue();
+            }
+
+            public IChurchBoolean RunNode(
+                N node, IEnumerable<IRoseTree<N, L>> branches)
+            {
+                return new ChurchFalse();
+            }
         }
 
         public static IChurchBoolean IsNode<N, L>(this IRoseTree<N, L> source)
@@ -33,10 +45,33 @@ namespace Ploeh.Samples.ChurchEncoding
             Func<N, IEnumerable<TResult>, TResult> node,
             Func<L, TResult> leaf)
         {
-            return tree.Match(
-                new RoseTreeParameters<N, L, TResult>(
-                    node: (n, branches) => node(n, branches.Select(t => t.Cata(node, leaf))),
-                    leaf: leaf));
+            return tree.Match(new CataParameters<N, L, TResult>(node, leaf));
+        }
+
+        private class CataParameters<N, L, TResult> : IRoseTreeParameters<N, L, TResult>
+        {
+            private readonly Func<N, IEnumerable<TResult>, TResult> node;
+            private readonly Func<L, TResult> leaf;
+
+            public CataParameters(
+                Func<N, IEnumerable<TResult>, TResult> node,
+                Func<L, TResult> leaf)
+            {
+                this.node = node;
+                this.leaf = leaf;
+            }
+
+            public TResult RunLeaf(L leaf)
+            {
+                return this.leaf(leaf);
+            }
+
+            public TResult RunNode(N node, IEnumerable<IRoseTree<N, L>> branches)
+            {
+                return this.node(
+                    node,
+                    branches.Select(t => t.Cata(this.node, leaf)));
+            }
         }
 
         // Bifunctor
