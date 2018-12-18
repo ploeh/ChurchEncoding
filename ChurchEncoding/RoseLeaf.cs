@@ -17,10 +17,10 @@ namespace Ploeh.Samples.ChurchEncoding
             this.value = value;
         }
 
-        public TResult Match<TResult>(
-            IRoseTreeParameters<N, L, TResult> parameters)
+        public TResult Accept<TResult>(
+            IRoseTreeVisitor<N, L, TResult> visitor)
         {
-            return parameters.RunLeaf(value);
+            return visitor.VisitLeaf(value);
         }
 
         public override bool Equals(object obj)

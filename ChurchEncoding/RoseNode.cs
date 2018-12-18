@@ -19,10 +19,10 @@ namespace Ploeh.Samples.ChurchEncoding
             this.branches = branches;
         }
 
-        public TResult Match<TResult>(
-            IRoseTreeParameters<N, L, TResult> parameters)
+        public TResult Accept<TResult>(
+            IRoseTreeVisitor<N, L, TResult> visitor)
         {
-            return parameters.RunNode(value, branches);
+            return visitor.VisitNode(value, branches);
         }
 
         public override bool Equals(object obj)

@@ -13,19 +13,19 @@ namespace Ploeh.Samples.ChurchEncoding
         public void MatchLeaf()
         {
             IRoseTree<string, int> tree = new RoseLeaf<string, int>(42);
-            int actual = tree.Match(new MatchIntLeafParameters());
+            int actual = tree.Accept(new MatchIntLeafVisitor());
             Assert.Equal(42, actual);
         }
 
-        private class MatchIntLeafParameters :
-            IRoseTreeParameters<string, int, int>
+        private class MatchIntLeafVisitor :
+            IRoseTreeVisitor<string, int, int>
         {
-            public int RunLeaf(int leaf)
+            public int VisitLeaf(int leaf)
             {
                 return leaf;
             }
 
-            public int RunNode(
+            public int VisitNode(
                 string node,
                 IEnumerable<IRoseTree<string, int>> branches)
             {
@@ -40,19 +40,19 @@ namespace Ploeh.Samples.ChurchEncoding
                 RoseTree.Node("foo",
                     new RoseLeaf<string, int>(42),
                     new RoseLeaf<string, int>(1337));
-            int actual = tree.Match(new MatchStringNodeParameters());
+            int actual = tree.Accept(new MatchStringNodeVisitor());
             Assert.Equal(3, actual);
         }
 
-        private class MatchStringNodeParameters :
-            IRoseTreeParameters<string, int, int>
+        private class MatchStringNodeVisitor :
+            IRoseTreeVisitor<string, int, int>
         {
-            public int RunLeaf(int leaf)
+            public int VisitLeaf(int leaf)
             {
                 return leaf;
             }
 
-            public int RunNode(
+            public int VisitNode(
                 string node,
                 IEnumerable<IRoseTree<string, int>> branches)
             {

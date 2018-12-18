@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ploeh.Samples.ChurchEncoding
 {
-    public interface IRoseTreeParameters<N, L, T>
+    public interface IRoseTreeVisitor<N, L, T>
     {
-        T RunNode(N node, IEnumerable<IRoseTree<N, L>> branches);
-        T RunLeaf(L leaf);
+        T VisitNode(N node, IEnumerable<IRoseTree<N, L>> branches);
+        T VisitLeaf(L leaf);
     }
 }

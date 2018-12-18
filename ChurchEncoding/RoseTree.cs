@@ -17,18 +17,18 @@ namespace Ploeh.Samples.ChurchEncoding
 
         public static IChurchBoolean IsLeaf<N, L>(this IRoseTree<N, L> source)
         {
-            return source.Match(new IsLeafParameters<N, L>());
+            return source.Accept(new IsLeafVisitor<N, L>());
         }
 
-        private class IsLeafParameters<N, L> :
-            IRoseTreeParameters<N, L, IChurchBoolean>
+        private class IsLeafVisitor<N, L> :
+            IRoseTreeVisitor<N, L, IChurchBoolean>
         {
-            public IChurchBoolean RunLeaf(L leaf)
+            public IChurchBoolean VisitLeaf(L leaf)
             {
                 return new ChurchTrue();
             }
 
-            public IChurchBoolean RunNode(
+            public IChurchBoolean VisitNode(
                 N node, IEnumerable<IRoseTree<N, L>> branches)
             {
                 return new ChurchFalse();
@@ -45,15 +45,15 @@ namespace Ploeh.Samples.ChurchEncoding
             Func<N, IEnumerable<TResult>, TResult> node,
             Func<L, TResult> leaf)
         {
-            return tree.Match(new CataParameters<N, L, TResult>(node, leaf));
+            return tree.Accept(new CataVisitor<N, L, TResult>(node, leaf));
         }
 
-        private class CataParameters<N, L, TResult> : IRoseTreeParameters<N, L, TResult>
+        private class CataVisitor<N, L, TResult> : IRoseTreeVisitor<N, L, TResult>
         {
             private readonly Func<N, IEnumerable<TResult>, TResult> node;
             private readonly Func<L, TResult> leaf;
 
-            public CataParameters(
+            public CataVisitor(
                 Func<N, IEnumerable<TResult>, TResult> node,
                 Func<L, TResult> leaf)
             {
@@ -61,12 +61,12 @@ namespace Ploeh.Samples.ChurchEncoding
                 this.leaf = leaf;
             }
 
-            public TResult RunLeaf(L leaf)
+            public TResult VisitLeaf(L leaf)
             {
                 return this.leaf(leaf);
             }
 
-            public TResult RunNode(N node, IEnumerable<IRoseTree<N, L>> branches)
+            public TResult VisitNode(N node, IEnumerable<IRoseTree<N, L>> branches)
             {
                 return this.node(
                     node,
