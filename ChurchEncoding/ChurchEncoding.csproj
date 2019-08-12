@@ -72,7 +72,9 @@
     <Compile Include="IEitherVisitor.cs" />
     <Compile Include="IMaybe.cs" />
     <Compile Include="INaturalNumber.cs" />
+    <Compile Include="IRoseTree.cs" />
     <Compile Include="Just.cs" />
+    <Compile Include="RoseLeaf.cs" />
     <Compile Include="Left.cs" />
     <Compile Include="Maybe.cs" />
     <Compile Include="IMaybeVisitor.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="INaturalNumberVisitor.cs" />
     <Compile Include="Leaf.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="RoseNode.cs" />
     <Compile Include="Nothing.cs" />
     <Compile Include="PaymentExample\Child.cs" />
     <Compile Include="PaymentExample\ChildPaymentService.cs" />
@@ -97,6 +100,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BooleanTests.cs" />
     <Compile Include="Right.cs" />
+    <Compile Include="RoseTree.cs" />
+    <Compile Include="IRoseTreeVisitor.cs" />
+    <Compile Include="RoseTreeTests.cs" />
     <Compile Include="Successor.cs" />
     <Compile Include="Zero.cs" />
   </ItemGroup>
