@@ -98,9 +98,7 @@ namespace Ploeh.Samples.ChurchEncoding
             Func<R, IEither<L, U>> k,
             Func<R, U, R1> s)
         {
-            return source
-                .SelectMany(x => k(x)
-                    .SelectMany(y => new Right<L, R1>(s(x, y))));
+            return source.SelectMany(x => k(x).Select(y => s(x, y)));
         }
 
         // Bifoldable - sort of... Really, the T involved should give rise to a
