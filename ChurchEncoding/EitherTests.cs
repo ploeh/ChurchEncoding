@@ -244,7 +244,10 @@ namespace Ploeh.Samples.ChurchEncoding
             IEither<string, DateTime> dt = TryParseDate("2022-03-21");
             IEither<string, TimeSpan> ts = TryParseDuration("2");
 
-            IEither<string, DateTime> result = dt.SelectMany(d => ts.Select(dur => d + dur));
+            IEither<string, DateTime> result =
+                from d in dt
+                from dur in ts
+                select d + dur;
 
             Assert.Equal(
                 new Right<string, DateTime>(new DateTime(2022, 3, 23)),
