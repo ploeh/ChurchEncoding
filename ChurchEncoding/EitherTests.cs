@@ -221,5 +221,35 @@ namespace Ploeh.Samples.ChurchEncoding
                          select Math.Pow(x, y);
             Assert.Equal("foo", actual.Select(_ => "bar").Bifold());
         }
+
+        public static IEither<string, DateTime> TryParseDate(string candidate)
+        {
+            if (DateTime.TryParse(candidate, out var d))
+                return new Right<string, DateTime>(d);
+            else
+                return new Left<string, DateTime>(candidate);
+        }
+
+        public static IEither<string, TimeSpan> TryParseDuration(string candidate)
+        {
+            if (TimeSpan.TryParse(candidate, out var ts))
+                return new Right<string, TimeSpan>(ts);
+            else
+                return new Left<string, TimeSpan>(candidate);
+        }
+
+        [Fact]
+        public void NestedParsingExample()
+        {
+            IEither<string, DateTime> dt = TryParseDate("2022-03-21");
+            IEither<string, TimeSpan> ts = TryParseDuration("2");
+
+            IEither<string, IEither<string, DateTime>> nested = dt.Select(d => ts.Select(dur => d + dur));
+            IEither<string, DateTime> flattened = nested.Join();
+
+            Assert.Equal(
+                new Right<string, DateTime>(new DateTime(2022, 3, 23)),
+                flattened);
+        }
     }
 }
