@@ -253,5 +253,69 @@ namespace Ploeh.Samples.ChurchEncoding
                 new Right<string, DateTime>(new DateTime(2022, 3, 23)),
                 result);
         }
+
+        [Theory]
+        [InlineData("2")]
+        [InlineData("2.3:00")]
+        [InlineData("4.5:30")]
+        [InlineData("0:33:44")]
+        [InlineData("foo")]
+        public void LeftIdentityLaw(string a)
+        {
+            Func<string, IEither<string, string>> @return = s => new Right<string, string>(s);
+            Func<string, IEither<string, TimeSpan>> h = TryParseDuration;
+
+            Assert.Equal(@return(a).SelectMany(h), h(a));
+        }
+
+        [Theory]
+        [InlineData("2022-03-22")]
+        [InlineData("2022-03-21T16:57")]
+        [InlineData("bar")]
+        public void RightIdentityLaw(string a)
+        {
+            Func<string, IEither<string, DateTime>> f = TryParseDate;
+            Func<DateTime, IEither<string, DateTime>> @return = d => new Right<string, DateTime>(d);
+
+            IEither<string, DateTime> m = f(a);
+
+            Assert.Equal(m.SelectMany(@return), m);
+        }
+
+        public static IEither<string, double> DaysForward(TimeSpan ts)
+        {
+            if (ts < TimeSpan.Zero)
+                return new Left<string, double>($"Negative durations not allowed: {ts}.");
+
+            return new Right<string, double>(ts.TotalDays);
+        }
+
+        public static IEither<string, int> Nat(double d)
+        {
+            if (d % 1 != 0)
+                return new Left<string, int>($"Non-integers not allowed: {d}.");
+            if (d < 1)
+                return new Left<string, int>($"Non-positive numbers not allowed: {d}.");
+
+            return new Right<string, int>((int)d);
+        }
+
+        [Theory]
+        [InlineData("2")]
+        [InlineData("-2.3:00")]
+        [InlineData("4.5:30")]
+        [InlineData("0:33:44")]
+        [InlineData("0")]
+        [InlineData("foo")]
+        public void AssociativityLaw(string a)
+        {
+            Func<string, IEither<string, TimeSpan>> f = TryParseDuration;
+            Func<TimeSpan, IEither<string, double>> g = DaysForward;
+            Func<double, IEither<string, int>> h = Nat;
+
+            var m = f(a);
+
+            Assert.Equal(m.SelectMany(g).SelectMany(h), m.SelectMany(x => g(x).SelectMany(h)));
+        }
     }
 }
