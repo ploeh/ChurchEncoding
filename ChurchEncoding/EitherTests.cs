@@ -244,12 +244,11 @@ namespace Ploeh.Samples.ChurchEncoding
             IEither<string, DateTime> dt = TryParseDate("2022-03-21");
             IEither<string, TimeSpan> ts = TryParseDuration("2");
 
-            IEither<string, IEither<string, DateTime>> nested = dt.Select(d => ts.Select(dur => d + dur));
-            IEither<string, DateTime> flattened = nested.Join();
+            IEither<string, DateTime> result = dt.SelectMany(d => ts.Select(dur => d + dur));
 
             Assert.Equal(
                 new Right<string, DateTime>(new DateTime(2022, 3, 23)),
-                flattened);
+                result);
         }
     }
 }
