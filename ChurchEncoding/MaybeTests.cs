@@ -121,5 +121,24 @@ namespace Ploeh.Samples.ChurchEncoding
                          select d;
             Assert.Equal(7, actual.Accept(new FromMaybeVisitor<double>(0)));
         }
+
+        [Fact]
+        public void NothingToList()
+        {
+            IMaybe<double> maybe = new Nothing<double>();
+            IEnumerable<double> actual = maybe.ToList();
+            Assert.Empty(actual);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData( 0)]
+        [InlineData(15)]
+        public void JustToList(double d)
+        {
+            IMaybe<double> maybe = new Just<double>(d);
+            IEnumerable<double> actual = maybe.ToList();
+            Assert.Single(actual, d);
+        }
     }
 }

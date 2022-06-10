@@ -110,5 +110,24 @@ namespace Ploeh.Samples.ChurchEncoding
                 .SelectMany(x => k(x)
                     .SelectMany(y => new Just<TResult>(s(x, y))));
         }
+
+        // Natural transformation to List
+        public static IEnumerable<T> ToList<T>(this IMaybe<T> source)
+        {
+            return source.Accept(new ToListVisitor<T>());
+        }
+
+        private class ToListVisitor<T> : IMaybeVisitor<T, IEnumerable<T>>
+        {
+            public IEnumerable<T> VisitNothing
+            {
+                get { return Enumerable.Empty<T>(); }
+            }
+
+            public IEnumerable<T> VisitJust(T just)
+            {
+                return new[] { just };
+            }
+        }
     }
 }
