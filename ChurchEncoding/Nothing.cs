@@ -12,5 +12,15 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             return visitor.VisitNothing;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Nothing<T>;
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
+        }
     }
 }

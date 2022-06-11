@@ -21,5 +21,16 @@ namespace Ploeh.Samples.ChurchEncoding
         {
             return visitor.VisitJust(value);
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Just<T> just &&
+                   EqualityComparer<T>.Default.Equals(value, just.value);
+        }
+
+        public override int GetHashCode()
+        {
+            return -1584136870 + EqualityComparer<T>.Default.GetHashCode(value);
+        }
     }
 }
