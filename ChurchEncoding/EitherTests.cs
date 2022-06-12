@@ -317,5 +317,27 @@ namespace Ploeh.Samples.ChurchEncoding
 
             Assert.Equal(m.SelectMany(g).SelectMany(h), m.SelectMany(x => g(x).SelectMany(h)));
         }
+
+        [Theory]
+        [InlineData("OMG!")]
+        [InlineData("Catastrophic failure")]
+        [InlineData("Important information!")]
+        public void IgnoreLeftOfLeft(string msg)
+        {
+            IEither<string, int> e = new Left<string, int>(msg);
+            IMaybe<int> actual = e.IgnoreLeft();
+            Assert.Equal(new Nothing<int>(), actual);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        public void IgnoreLeftOfRight(int i)
+        {
+            IEither<string, int> e = new Right<string, int>(i);
+            IMaybe<int> actual = e.IgnoreLeft();
+            Assert.Equal(new Just<int>(i), actual);
+        }
     }
 }

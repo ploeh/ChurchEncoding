@@ -120,5 +120,24 @@ namespace Ploeh.Samples.ChurchEncoding
                 return right;
             }
         }
+
+        // Natural transformation example
+        public static IMaybe<R> IgnoreLeft<L, R>(this IEither<L, R> source)
+        {
+            return source.Accept(new IgnoreLeftVisitor<L, R>());
+        }
+
+        private class IgnoreLeftVisitor<L, R> : IEitherVisitor<L, R, IMaybe<R>>
+        {
+            public IMaybe<R> VisitLeft(L left)
+            {
+                return new Nothing<R>();
+            }
+
+            public IMaybe<R> VisitRight(R right)
+            {
+                return new Just<R>(right);
+            }
+        }
     }
 }
