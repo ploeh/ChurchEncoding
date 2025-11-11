@@ -70,5 +70,30 @@ namespace Ploeh.Samples.ChurchEncoding
                 return new Left<int, IEither<(int, int), (int, (int, int))>>(year);
             }
         }
+
+        [Theory]
+        [InlineData(2000)]
+        [InlineData(1970)]
+        [InlineData(1491)]
+        public void CanonicalToYear(int y)
+        {
+            var sut = new Left<int, IEither<(int, int), (int, (int, int))>>(y);
+            var actual = sut.Accept(new ToPeriodVisitor());
+            Assert.Equal(new Year(y), actual);
+        }
+
+        private class ToPeriodVisitor :
+            IEitherVisitor<int, IEither<(int, int), (int, (int, int))>, IPeriod>
+        {
+            public IPeriod VisitLeft(int left)
+            {
+                return new Year(left);
+            }
+
+            public IPeriod VisitRight(IEither<(int, int), (int, (int, int))> right)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
     }
 }
