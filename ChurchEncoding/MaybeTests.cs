@@ -140,5 +140,24 @@ namespace Ploeh.Samples.ChurchEncoding
             IEnumerable<double> actual = maybe.ToList();
             Assert.Single(actual, d);
         }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData( 0)]
+        [InlineData(15)]
+        public void JustToCanonicalEither(int i)
+        {
+            var m = new Just<int>(i);
+            var e = m.ToEither();
+            Assert.Equal(new Right<Unit, int>(i), e);
+        }
+
+        [Fact]
+        public void NothingToCanonicalEither()
+        {
+            var m = new Nothing<bool>();
+            var e = m.ToEither();
+            Assert.Equal(new Left<Unit, bool>(Unit.Instance), e);
+        }
     }
 }

@@ -129,5 +129,21 @@ namespace Ploeh.Samples.ChurchEncoding
                 return new[] { just };
             }
         }
+
+        // Natural transformation to Either
+        public static IEither<Unit, T> ToEither<T>(this IMaybe<T> source)
+        {
+            return source.Accept(new ToEitherVisitor<T>());
+        }
+
+        private class ToEitherVisitor<T> : IMaybeVisitor<T, IEither<Unit, T>>
+        {
+            public IEither<Unit, T> VisitNothing => new Left<Unit, T>(Unit.Instance);
+
+            public IEither<Unit, T> VisitJust(T just)
+            {
+                return new Right<Unit, T>(just);
+            }
+        }
     }
 }
