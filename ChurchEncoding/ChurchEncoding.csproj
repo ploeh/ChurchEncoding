@@ -124,6 +124,7 @@
     <Compile Include="IRoseTreeVisitor.cs" />
     <Compile Include="RoseTreeTests.cs" />
     <Compile Include="Successor.cs" />
+    <Compile Include="Unit.cs" />
     <Compile Include="Zero.cs" />
   </ItemGroup>
   <ItemGroup>

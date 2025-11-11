@@ -114,13 +114,6 @@ namespace Ploeh.Samples.ChurchEncoding
             Assert.Equal(1382, actual);
         }
 
-        public class Unit
-        {
-            public readonly static Unit Instance = new Unit();
-
-            private Unit() { }
-        }
-
         [Fact]
         public void UseMeertensTree()
         {
