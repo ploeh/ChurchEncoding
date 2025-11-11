@@ -159,5 +159,22 @@ namespace Ploeh.Samples.ChurchEncoding
             var e = m.ToEither();
             Assert.Equal(new Left<Unit, bool>(Unit.Instance), e);
         }
+
+        private sealed class StringMaybes : TheoryData<IMaybe<string>>
+        {
+            public StringMaybes()
+            {
+                Add(new Nothing<string>());
+                Add(new Just<string>("hello"));
+                Add(new Just<string>("world"));
+            }
+        }
+
+        [Theory, ClassData(typeof(StringMaybes))]
+        public void IsomorphismViaEither(IMaybe<string> expected)
+        {
+            var actual = expected.ToEither().ToMaybe();
+            Assert.Equal(expected, actual);
+        }
     }
 }
