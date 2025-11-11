@@ -359,7 +359,7 @@ namespace Ploeh.Samples.ChurchEncoding
             Assert.Equal(new Nothing<string>(), m);
         }
 
-        private class UnitIntEithers : TheoryData<IEither<Unit, int>>
+        private sealed class UnitIntEithers : TheoryData<IEither<Unit, int>>
         {
             public UnitIntEithers()
             {
