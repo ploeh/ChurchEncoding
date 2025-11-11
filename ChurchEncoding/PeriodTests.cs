@@ -94,6 +94,18 @@ namespace Ploeh.Samples.ChurchEncoding
             Assert.Equal(new Month(y, m), actual);
         }
 
+        [Theory]
+        [InlineData(2024, 6, 15)]
+        [InlineData(2010, 2, 30)]
+        [InlineData(1452, 10, 20)]
+        public void CanonicalToDay(int y, int m, int d)
+        {
+            var sut = new Right<int, IEither<(int, int), (int, (int, int))>>(
+                new Right<(int, int), (int, (int, int))>((y, (m, d))));
+            var actual = sut.Accept(new ToPeriodVisitor());
+            Assert.Equal(new Day(y, m, d), actual);
+        }
+
         private class ToPeriodVisitor :
             IEitherVisitor<int, IEither<(int, int), (int, (int, int))>, IPeriod>
         {
@@ -118,7 +130,8 @@ namespace Ploeh.Samples.ChurchEncoding
 
                 public IPeriod VisitRight((int, (int, int)) right)
                 {
-                    throw new System.NotImplementedException();
+                    var (y, (m, d)) = right;
+                    return new Day(y, m, d);
                 }
             }
         }
