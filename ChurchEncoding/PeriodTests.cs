@@ -82,6 +82,18 @@ namespace Ploeh.Samples.ChurchEncoding
             Assert.Equal(new Year(y), actual);
         }
 
+        [Theory]
+        [InlineData(2013, 12)]
+        [InlineData(2002, 1)]
+        [InlineData(1969, 9)]
+        public void CanonicalToMonth(int y, int m)
+        {
+            var sut = new Right<int, IEither<(int, int), (int, (int, int))>>(
+                new Left<(int, int), (int, (int, int))>((y, m)));
+            var actual = sut.Accept(new ToPeriodVisitor());
+            Assert.Equal(new Month(y, m), actual);
+        }
+
         private class ToPeriodVisitor :
             IEitherVisitor<int, IEither<(int, int), (int, (int, int))>, IPeriod>
         {
@@ -92,7 +104,22 @@ namespace Ploeh.Samples.ChurchEncoding
 
             public IPeriod VisitRight(IEither<(int, int), (int, (int, int))> right)
             {
-                throw new System.NotImplementedException();
+                return right.Accept(new ToMonthOrDayVisitor());
+            }
+
+            private class ToMonthOrDayVisitor :
+                IEitherVisitor<(int, int), (int, (int, int)), IPeriod>
+            {
+                public IPeriod VisitLeft((int, int) left)
+                {
+                    var (y, m) = left;
+                    return new Month(y, m);
+                }
+
+                public IPeriod VisitRight((int, (int, int)) right)
+                {
+                    throw new System.NotImplementedException();
+                }
             }
         }
     }
