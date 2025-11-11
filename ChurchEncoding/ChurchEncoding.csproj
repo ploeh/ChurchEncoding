@@ -84,6 +84,7 @@
     <Compile Include="ChurchNot.cs" />
     <Compile Include="ChurchOr.cs" />
     <Compile Include="ChurchTrue.cs" />
+    <Compile Include="Day.cs" />
     <Compile Include="Either.cs" />
     <Compile Include="EitherTests.cs" />
     <Compile Include="IBinaryTree.cs" />
@@ -92,8 +93,12 @@
     <Compile Include="IEitherVisitor.cs" />
     <Compile Include="IMaybe.cs" />
     <Compile Include="INaturalNumber.cs" />
+    <Compile Include="IPeriod.cs" />
+    <Compile Include="IPeriodVisitor.cs" />
     <Compile Include="IRoseTree.cs" />
     <Compile Include="Just.cs" />
+    <Compile Include="Month.cs" />
+    <Compile Include="PeriodTests.cs" />
     <Compile Include="RoseLeaf.cs" />
     <Compile Include="Left.cs" />
     <Compile Include="Maybe.cs" />
@@ -125,6 +130,7 @@
     <Compile Include="RoseTreeTests.cs" />
     <Compile Include="Successor.cs" />
     <Compile Include="Unit.cs" />
+    <Compile Include="Year.cs" />
     <Compile Include="Zero.cs" />
   </ItemGroup>
   <ItemGroup>
