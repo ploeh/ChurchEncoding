@@ -31,11 +31,29 @@ namespace Ploeh.Samples.ChurchEncoding
                 actual);
         }
 
+        [Theory]
+        [InlineData(2024, 11, 11)]
+        [InlineData(1993, 1, 1)]
+        [InlineData(1774, 9, 23)]
+        public void DayToCanonical(int y, int m, int d)
+        {
+            var sut = new Day(y, m, d);
+            var actual = sut.Accept(new ToCanonicalPeriodVisitor());
+            Assert.Equal(
+                new Right<int, IEither<(int, int), (int, (int, int))>>(
+                    new Right<(int, int), (int, (int, int))>((y, (m, d)))),
+                actual);
+        }
+
         private class ToCanonicalPeriodVisitor : IPeriodVisitor<IEither<int, IEither<(int, int), (int, (int, int))>>>
         {
-            public IEither<int, IEither<(int, int), (int, (int, int))>> VisitDay(int year, int month, int day)
+            public IEither<int, IEither<(int, int), (int, (int, int))>> VisitDay(
+                int year,
+                int month,
+                int day)
             {
-                throw new System.NotImplementedException();
+                return new Right<int, IEither<(int, int), (int, (int, int))>>(
+                    new Right<(int, int), (int, (int, int))>((year, (month, day))));
             }
 
             public IEither<int, IEither<(int, int), (int, (int, int))>> VisitMonth(
