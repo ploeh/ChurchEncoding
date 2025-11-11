@@ -358,5 +358,24 @@ namespace Ploeh.Samples.ChurchEncoding
             var m = e.ToMaybe();
             Assert.Equal(new Nothing<string>(), m);
         }
+
+        private class UnitIntEithers : TheoryData<IEither<Unit, int>>
+        {
+            public UnitIntEithers()
+            {
+                Add(new Left<Unit, int>(Unit.Instance));
+                Add(new Right<Unit, int>(-1));
+                Add(new Right<Unit, int>(0));
+                Add(new Right<Unit, int>(1));
+                Add(new Right<Unit, int>(42));
+            }
+        }
+
+        [Theory, ClassData(typeof(UnitIntEithers))]
+        public void IsomorphismViaMaybe(IEither<Unit, int> expected)
+        {
+            var actual = expected.ToMaybe().ToEither();
+            Assert.Equal(expected, actual);
+        }
     }
 }
