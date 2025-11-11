@@ -339,5 +339,24 @@ namespace Ploeh.Samples.ChurchEncoding
             IMaybe<int> actual = e.IgnoreLeft();
             Assert.Equal(new Just<int>(i), actual);
         }
+
+        [Theory]
+        [InlineData("Foo")]
+        [InlineData("Bar")]
+        [InlineData("Baz")]
+        public void CanonicalRightToMaybe(string s)
+        {
+            var e = new Right<Unit, string>(s);
+            var m = e.ToMaybe();
+            Assert.Equal(new Just<string>(s), m);
+        }
+
+        [Fact]
+        public void CanonicalLeftToMaybe()
+        {
+            var e = new Left<Unit, string>(Unit.Instance);
+            var m = e.ToMaybe();
+            Assert.Equal(new Nothing<string>(), m);
+        }
     }
 }

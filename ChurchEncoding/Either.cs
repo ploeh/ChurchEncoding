@@ -139,5 +139,11 @@ namespace Ploeh.Samples.ChurchEncoding
                 return new Just<R>(right);
             }
         }
+
+        // Natural transformation from canonical representation to Maybe
+        public static IMaybe<R> ToMaybe<R>(this IEither<Unit, R> source)
+        {
+            return source.IgnoreLeft();
+        }
     }
 }
