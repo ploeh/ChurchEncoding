@@ -135,5 +135,27 @@ namespace Ploeh.Samples.ChurchEncoding
                 }
             }
         }
+
+        private class PeriodData : TheoryData<IPeriod>
+        {
+            public PeriodData()
+            {
+                Add(new Year(2024));
+                Add(new Year(1999));
+                Add(new Month(2024, 6));
+                Add(new Month(1997, 12));
+                Add(new Day(2024, 6, 15));
+                Add(new Day(1776, 7, 4));
+            }
+        }
+
+        [Theory, ClassData(typeof(PeriodData))]
+        public void IsomorphismViaEither(IPeriod expected)
+        {
+            var actual = expected
+                .Accept(new ToCanonicalPeriodVisitor())
+                .Accept(new ToPeriodVisitor());
+            Assert.Equal(expected, actual);
+        }
     }
 }

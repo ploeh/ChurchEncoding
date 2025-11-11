@@ -1,6 +1,6 @@
 ﻿namespace Ploeh.Samples.ChurchEncoding
 {
-    internal interface IPeriodVisitor<T>
+    public interface IPeriodVisitor<T>
     {
         T VisitYear(int year);
         T VisitMonth(int year, int month);
