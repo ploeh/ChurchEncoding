@@ -45,7 +45,8 @@ namespace Ploeh.Samples.ChurchEncoding
                 actual);
         }
 
-        private class ToCanonicalPeriodVisitor : IPeriodVisitor<IEither<int, IEither<(int, int), (int, (int, int))>>>
+        private class ToCanonicalPeriodVisitor :
+            IPeriodVisitor<IEither<int, IEither<(int, int), (int, (int, int))>>>
         {
             public IEither<int, IEither<(int, int), (int, (int, int))>> VisitDay(
                 int year,
