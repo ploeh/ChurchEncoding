@@ -144,6 +144,21 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
                 actual);
         }
 
+        [Fact]
+        public void CanonicalToChild()
+        {
+            var sut = new Right<(string, string), IEither<(string, string), (string, (string, string))>>(
+                new Right<(string, string), (string, (string, string))>(
+                    ("12345", ("MasterCard", "Pay"))));
+            var actual = sut.Accept(new FromCanonicalPaymentTypeVisitor());
+            Assert.Equal(
+                new Child(
+                    new ChildPaymentService(
+                        "12345",
+                        new PaymentService("MasterCard", "Pay"))),
+                actual);
+        }
+
         private class FromCanonicalPaymentTypeVisitor :
             IEitherVisitor<(string, string), IEither<(string, string), (string, (string, string))>, IPaymentType>
         {
@@ -168,7 +183,8 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
 
                 public IPaymentType VisitRight((string, (string, string)) right)
                 {
-                    throw new NotImplementedException();
+                    var (k, (n, a)) = right;
+                    return new Child(new ChildPaymentService(k, new PaymentService(n, a)));
                 }
             }
         }

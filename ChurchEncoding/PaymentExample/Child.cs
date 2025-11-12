@@ -19,5 +19,16 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
         {
             return visitor.VisitChild(childPaymentService);
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Child child &&
+                   EqualityComparer<ChildPaymentService>.Default.Equals(childPaymentService, child.childPaymentService);
+        }
+
+        public override int GetHashCode()
+        {
+            return 499700248 + EqualityComparer<ChildPaymentService>.Default.GetHashCode(childPaymentService);
+        }
     }
 }
