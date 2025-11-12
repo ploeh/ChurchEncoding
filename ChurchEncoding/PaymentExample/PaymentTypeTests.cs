@@ -119,5 +119,30 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
                         (parent.Name, parent.Action)));
             }
         }
+
+        [Fact]
+        public void CanonicalToIndividual()
+        {
+            var sut = new Left<(string, string), IEither<(string, string), (string, (string, string))>>(
+                    ("MasterCard", "Pay"));
+            var actual = sut.Accept(new FromCanonicalPaymentTypeVisitor());
+            Assert.Equal(
+                new Individual(new PaymentService("MasterCard", "Pay")),
+                actual);
+        }
+
+        private class FromCanonicalPaymentTypeVisitor : IEitherVisitor<(string, string), IEither<(string, string), (string, (string, string))>, IPaymentType>
+        {
+            public IPaymentType VisitLeft((string, string) left)
+            {
+                var (name, action) = left;
+                return new Individual(new PaymentService(name, action));
+            }
+
+            public IPaymentType VisitRight(IEither<(string, string), (string, (string, string))> right)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }
