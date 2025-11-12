@@ -54,5 +54,38 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
                 actual.TransactionKey.Accept(
                     new FromMaybeVisitor<string>("")));
         }
+
+        [Fact]
+        public void IndividualToCanonical()
+        {
+            var sut = new Individual(new PaymentService("MasterCard", "Pay"));
+            var actual = sut.Accept(new ToCanonicalPaymentTypeVisitor());
+            Assert.Equal(
+                new Left<(string, string), IEither<(string, string), (string, (string, string))>>(
+                    ("MasterCard", "Pay")),
+                actual);
+        }
+
+        private class ToCanonicalPaymentTypeVisitor :
+            IPaymentTypeVisitor<
+                IEither<(string, string),
+                IEither<(string, string), (string, (string, string))>>>
+        {
+            public IEither<(string, string), IEither<(string, string), (string, (string, string))>> VisitChild(ChildPaymentService child)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEither<(string, string), IEither<(string, string), (string, (string, string))>> VisitIndividual(PaymentService individual)
+            {
+                return new Left<(string, string), IEither<(string, string), (string, (string, string))>>(
+                    (individual.Name, individual.Action));
+            }
+
+            public IEither<(string, string), IEither<(string, string), (string, (string, string))>> VisitParent(PaymentService parent)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }
