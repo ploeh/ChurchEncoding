@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -124,14 +125,27 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
         public void CanonicalToIndividual()
         {
             var sut = new Left<(string, string), IEither<(string, string), (string, (string, string))>>(
-                    ("MasterCard", "Pay"));
+                ("MasterCard", "Pay"));
             var actual = sut.Accept(new FromCanonicalPaymentTypeVisitor());
             Assert.Equal(
                 new Individual(new PaymentService("MasterCard", "Pay")),
                 actual);
         }
 
-        private class FromCanonicalPaymentTypeVisitor : IEitherVisitor<(string, string), IEither<(string, string), (string, (string, string))>, IPaymentType>
+        [Fact]
+        public void CanonicalToParent()
+        {
+            var sut = new Right<(string, string), IEither<(string, string), (string, (string, string))>>(
+                new Left<(string, string), (string, (string, string))>(
+                    ("MasterCard", "Pay")));
+            var actual = sut.Accept(new FromCanonicalPaymentTypeVisitor());
+            Assert.Equal(
+                new Parent(new PaymentService("MasterCard", "Pay")),
+                actual);
+        }
+
+        private class FromCanonicalPaymentTypeVisitor :
+            IEitherVisitor<(string, string), IEither<(string, string), (string, (string, string))>, IPaymentType>
         {
             public IPaymentType VisitLeft((string, string) left)
             {
@@ -141,7 +155,21 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
 
             public IPaymentType VisitRight(IEither<(string, string), (string, (string, string))> right)
             {
-                throw new NotImplementedException();
+                return right.Accept(new CanonicalParentChildPaymentTypeVisitor());
+            }
+
+            private class CanonicalParentChildPaymentTypeVisitor : IEitherVisitor<(string, string), (string, (string, string)), IPaymentType>
+            {
+                public IPaymentType VisitLeft((string, string) left)
+                {
+                    var (name, action) = left;
+                    return new Parent(new PaymentService(name, action));
+                }
+
+                public IPaymentType VisitRight((string, (string, string)) right)
+                {
+                    throw new NotImplementedException();
+                }
             }
         }
     }
