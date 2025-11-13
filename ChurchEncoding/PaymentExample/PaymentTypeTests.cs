@@ -100,20 +100,29 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
                 IEither<(string, string),
                 IEither<(string, string), (string, (string, string))>>>
         {
-            public IEither<(string, string), IEither<(string, string), (string, (string, string))>> VisitChild(ChildPaymentService child)
+            public IEither<(string, string), IEither<(string, string), (string, (string, string))>>
+                VisitChild(ChildPaymentService child)
             {
                 return new Right<(string, string), IEither<(string, string), (string, (string, string))>>(
                     new Right<(string, string), (string, (string, string))>(
-                        (child.OriginalTransactionKey, (child.PaymentService.Name, child.PaymentService.Action))));
+                        (
+                            child.OriginalTransactionKey,
+                            (
+                                child.PaymentService.Name,
+                                child.PaymentService.Action
+                            )
+                        )));
             }
 
-            public IEither<(string, string), IEither<(string, string), (string, (string, string))>> VisitIndividual(PaymentService individual)
+            public IEither<(string, string), IEither<(string, string), (string, (string, string))>>
+                VisitIndividual(PaymentService individual)
             {
                 return new Left<(string, string), IEither<(string, string), (string, (string, string))>>(
                     (individual.Name, individual.Action));
             }
 
-            public IEither<(string, string), IEither<(string, string), (string, (string, string))>> VisitParent(PaymentService parent)
+            public IEither<(string, string), IEither<(string, string), (string, (string, string))>>
+                VisitParent(PaymentService parent)
             {
                 return new Right<(string, string), IEither<(string, string), (string, (string, string))>>(
                     new Left<(string, string), (string, (string, string))>(
