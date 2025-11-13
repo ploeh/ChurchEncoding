@@ -200,5 +200,28 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
                 }
             }
         }
+
+        private sealed class PaymentTypes : TheoryData<IPaymentType>
+        {
+            public PaymentTypes()
+            {
+                Add(new Individual(new PaymentService("Visa", "Pay")));
+                Add(new Parent(new PaymentService("AmEx", "Pay")));
+                Add(
+                    new Child(
+                        new ChildPaymentService(
+                            "1234ABCD",
+                            new PaymentService("DisCard", "Pay"))));
+            }
+        }
+
+        [Theory, ClassData(typeof(PaymentTypes))]
+        public void IsomorphismViaEither(IPaymentType expected)
+        {
+            var actual = expected
+                .Accept(new ToCanonicalPaymentTypeVisitor())
+                .Accept(new FromCanonicalPaymentTypeVisitor());
+            Assert.Equal(expected, actual);
+        }
     }
 }
