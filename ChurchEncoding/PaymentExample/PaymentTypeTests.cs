@@ -169,7 +169,9 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
         }
 
         private class FromCanonicalPaymentTypeVisitor :
-            IEitherVisitor<(string, string), IEither<(string, string), (string, (string, string))>, IPaymentType>
+            IEitherVisitor<
+                (string, string),
+                IEither<(string, string), (string, (string, string))>, IPaymentType>
         {
             public IPaymentType VisitLeft((string, string) left)
             {
@@ -182,7 +184,8 @@ namespace Ploeh.Samples.ChurchEncoding.PaymentExample
                 return right.Accept(new CanonicalParentChildPaymentTypeVisitor());
             }
 
-            private class CanonicalParentChildPaymentTypeVisitor : IEitherVisitor<(string, string), (string, (string, string)), IPaymentType>
+            private class CanonicalParentChildPaymentTypeVisitor :
+                IEitherVisitor<(string, string), (string, (string, string)), IPaymentType>
             {
                 public IPaymentType VisitLeft((string, string) left)
                 {
